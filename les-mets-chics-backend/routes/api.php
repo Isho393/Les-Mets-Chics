@@ -16,6 +16,10 @@ use App\Http\Controllers\Api\CommentController;
 
 // Public routes (no authentication required)
 Route::get('/recipes', [RecipeController::class, 'index']); // Homepage recipes list
+Route::get('/recipes/{slug}', [RecipeController::class, 'show']); // Recipe details
+Route::get('/categories', [CategoryController::class, 'index']); // Categories list
+Route::get('/categories/{slug}/recipes', [CategoryController::class, 'recipes']); // Recipes by category
+Route::get('/recipes/{slug}/comments', [CommentController::class, 'index']); // View comments
 
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -27,22 +31,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'user']);
     
-    // Recipes
-    Route::get('/recipes/{slug}', [RecipeController::class, 'show']);
-    
-    // Categories
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{slug}/recipes', [CategoryController::class, 'recipes']);
-    
-    // Likes
+    // Likes (require authentication)
     Route::post('/recipes/{slug}/like', [LikeController::class, 'toggle']);
     Route::get('/recipes/{slug}/like/check', [LikeController::class, 'check']);
     
-    // Comments
-    Route::get('/recipes/{slug}/comments', [CommentController::class, 'index']);
+    // Comments (posting requires authentication)
     Route::post('/recipes/{slug}/comments', [CommentController::class, 'store']);
 
-    // Uploads
+    // Uploads (require authentication)
     Route::post('/upload/image', [\App\Http\Controllers\Api\FileUploadController::class, 'uploadImage']);
     Route::post('/upload/video', [\App\Http\Controllers\Api\FileUploadController::class, 'uploadVideo']);
 });

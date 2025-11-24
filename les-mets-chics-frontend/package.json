@@ -1,0 +1,25 @@
+{
+  "name": "les-mets-chics-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@pinia/nuxt": "^0.5.5",
+    "nuxt": "^3.14.159",
+    "pinia": "^2.2.6",
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "@nuxt/icon": "^1.9.3",
+    "@nuxtjs/google-fonts": "^3.2.0",
+    "@nuxtjs/color-mode": "^3.5.2"
+  }
+}
