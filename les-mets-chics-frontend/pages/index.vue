@@ -3,7 +3,7 @@
     <NuxtLayout name="default">
       <!-- Hero Section -->
       <section class="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-primary-900/90 to-accent-900/90 z-10"></div>
+        <div class="absolute inset-0 bg-gradient-to-br from-primary-900/40 to-accent-900/40 z-10"></div>
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1920')] bg-cover bg-center"></div>
         
         <div class="relative z-20 text-center text-white px-4 max-w-4xl mx-auto">
