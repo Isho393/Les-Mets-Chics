@@ -67,7 +67,7 @@ class RecipeController extends Controller
                         'slug' => $recipe->category->slug,
                     ],
                     'likes_count' => $recipe->likes()->count(),
-                    'comments_count' => $recipe->comments()->where('is_approved', true)->count(),
+                    'comments_count' => $recipe->comments()->count(),
                 ];
             });
 
@@ -115,7 +115,7 @@ class RecipeController extends Controller
     public function show($slug)
     {
         $recipe = Recipe::with(['user', 'category', 'comments' => function ($query) {
-            $query->where('is_approved', true)->with('user')->latest();
+            $query->with('user')->latest();
         }])
             ->where('slug', $slug)
             ->where('status', 'published')

@@ -37,6 +37,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 const api = useApi()
 const { data: categoriesData, pending } = await useAsyncData('categories', () => api.getCategories())
 const categories = computed(() => categoriesData.value?.categories || [])

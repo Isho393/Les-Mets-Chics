@@ -1,6 +1,7 @@
 <template>
-  <NuxtLink 
-    :to="`/recettes/${recipe.slug}`" 
+  <component 
+    :is="clickable ? 'NuxtLink' : 'div'"
+    :to="clickable ? `/recettes/${recipe.slug}` : undefined"
     class="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all transform hover:-translate-y-2"
   >
     <!-- Image -->
@@ -60,7 +61,7 @@
         </div>
       </div>
     </div>
-  </NuxtLink>
+  </component>
 </template>
 
 <script setup>
@@ -68,6 +69,10 @@ defineProps({
   recipe: {
     type: Object,
     required: true
+  },
+  clickable: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

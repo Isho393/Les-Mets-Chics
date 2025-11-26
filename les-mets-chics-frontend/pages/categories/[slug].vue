@@ -37,6 +37,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 const route = useRoute()
 const api = useApi()
 

@@ -14,14 +14,14 @@
             Découvrez des recettes raffinées qui éveilleront vos papilles
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <NuxtLink to="/recettes" class="btn-hero-primary">
+            <button @click="handleExploreRecipes" class="btn-hero-primary">
               <Icon name="mdi:silverware-fork-knife" class="mr-2" />
               Explorer les recettes
-            </NuxtLink>
-            <NuxtLink to="/categories" class="btn-hero-secondary">
+            </button>
+            <button @click="handleViewCategories" class="btn-hero-secondary">
               <Icon name="mdi:view-grid" class="mr-2" />
               Voir les catégories
-            </NuxtLink>
+            </button>
           </div>
         </div>
       </section>
@@ -46,11 +46,14 @@
         </div>
 
         <div v-else-if="recipes?.length" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <RecipeCard 
+          <div 
             v-for="recipe in recipes.slice(0, 6)" 
-            :key="recipe.id" 
-            :recipe="recipe" 
-          />
+            :key="recipe.id"
+            @click="handleRecipeClick"
+            class="cursor-pointer"
+          >
+            <RecipeCard :recipe="recipe" :clickable="false" />
+          </div>
         </div>
 
         <div v-else class="text-center py-12">
@@ -59,10 +62,10 @@
         </div>
 
         <div class="text-center mt-12">
-          <NuxtLink to="/recettes" class="btn-primary-large">
+          <button @click="handleViewAllRecipes" class="btn-primary-large">
             Voir toutes les recettes
             <Icon name="mdi:arrow-right" class="ml-2" />
-          </NuxtLink>
+          </button>
         </div>
       </section>
 
@@ -79,18 +82,18 @@
           </div>
 
           <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <NuxtLink 
+            <div 
               v-for="category in categories" 
               :key="category.id"
-              :to="`/categories/${category.slug}`"
-              class="category-card group"
+              @click="handleCategoryClick"
+              class="category-card group cursor-pointer"
             >
               <div class="aspect-square bg-gradient-to-br from-primary-400 to-accent-400 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
                 <Icon name="mdi:chef-hat" class="text-white text-5xl" />
               </div>
               <h3 class="font-semibold text-primary-900 text-center">{{ category.name }}</h3>
               <p class="text-sm text-primary-600 text-center">{{ category.recipes_count }} recettes</p>
-            </NuxtLink>
+            </div>
           </div>
         </div>
       </section>
@@ -116,6 +119,7 @@
 
 <script setup>
 const api = useApi()
+const authStore = useAuthStore()
 
 const { data: recipesData, pending } = await useAsyncData('recipes', () => 
   api.getRecipes()
@@ -129,6 +133,42 @@ const categories = ref([
   { id: 3, name: 'Asiatique', slug: 'asiatique', recipes_count: 10 },
   { id: 4, name: 'Desserts', slug: 'desserts', recipes_count: 15 }
 ])
+
+const handleRecipeClick = () => {
+  if (!authStore.isAuthenticated) {
+    navigateTo('/connexion')
+  }
+}
+
+const handleCategoryClick = () => {
+  if (!authStore.isAuthenticated) {
+    navigateTo('/connexion')
+  }
+}
+
+const handleExploreRecipes = () => {
+  if (authStore.isAuthenticated) {
+    navigateTo('/recettes')
+  } else {
+    navigateTo('/connexion')
+  }
+}
+
+const handleViewCategories = () => {
+  if (authStore.isAuthenticated) {
+    navigateTo('/categories')
+  } else {
+    navigateTo('/connexion')
+  }
+}
+
+const handleViewAllRecipes = () => {
+  if (authStore.isAuthenticated) {
+    navigateTo('/recettes')
+  } else {
+    navigateTo('/connexion')
+  }
+}
 </script>
 
 <style scoped>

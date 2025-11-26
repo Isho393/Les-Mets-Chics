@@ -87,8 +87,20 @@
                 v-model="newComment"
                 placeholder="Partagez votre avis..."
                 class="w-full px-4 py-3 border-2 border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 resize-none"
+                :class="{ 'border-red-500': commentError }"
                 rows="3"
               ></textarea>
+              
+              <div v-if="commentError" class="mt-2 text-red-600 text-sm flex items-center">
+                <Icon name="mdi:alert-circle" class="mr-1" />
+                {{ commentError }}
+              </div>
+              
+              <div v-if="commentSuccess" class="mt-2 text-green-600 text-sm flex items-center">
+                <Icon name="mdi:check-circle" class="mr-1" />
+                {{ commentSuccess }}
+              </div>
+              
               <button type="submit" :disabled="!newComment.trim()" class="btn-primary mt-2">
                 Publier le commentaire
               </button>
@@ -116,6 +128,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 const route = useRoute()
 const api = useApi()
 const authStore = useAuthStore()
@@ -143,16 +159,39 @@ const toggleLike = async () => {
   }
 }
 
+const commentError = ref('')
+const commentSuccess = ref('')
+
 const submitComment = async () => {
   if (!authStore.isAuthenticated) {
     navigateTo('/connexion')
     return
   }
+  
+  commentError.value = ''
+  commentSuccess.value = ''
+  
   try {
-    await api.addComment(route.params.slug, newComment.value)
+    const result = await api.addComment(route.params.slug, newComment.value)
+    
+    // Ajouter le nouveau commentaire à la liste immédiatement
+    if (result.comment) {
+      recipe.value.comments.unshift(result.comment)
+    }
+    
+    commentSuccess.value = result.message
     newComment.value = ''
-    refreshNuxtData(`recipe-${route.params.slug}`)
+    
+    // Effacer le message de succès après 3 secondes
+    setTimeout(() => {
+      commentSuccess.value = ''
+    }, 3000)
   } catch (error) {
+    if (error.data?.message) {
+      commentError.value = error.data.message
+    } else {
+      commentError.value = 'Erreur lors de l\'ajout du commentaire'
+    }
     console.error('Erreur lors de l\'ajout du commentaire:', error)
   }
 }

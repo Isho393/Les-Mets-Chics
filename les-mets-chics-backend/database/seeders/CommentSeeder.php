@@ -39,7 +39,7 @@ class CommentSeeder extends Seeder
                 'user_id' => $users->random()->id,
                 'recipe_id' => $coqAuVin->id,
                 'body' => 'Combien de temps peut-on conserver ce plat au réfrigérateur ?',
-                'is_approved' => false, // En attente de modération
+                'is_approved' => true,
             ]);
         }
 
@@ -57,7 +57,7 @@ class CommentSeeder extends Seeder
                 'user_id' => $users->random()->id,
                 'recipe_id' => $ramen->id,
                 'body' => 'Peut-on utiliser des os de poulet à la place ?',
-                'is_approved' => false, // En attente de modération
+                'is_approved' => true,
             ]);
         }
     }
