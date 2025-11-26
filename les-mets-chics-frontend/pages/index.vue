@@ -49,7 +49,7 @@
           <div 
             v-for="recipe in recipes.slice(0, 6)" 
             :key="recipe.id"
-            @click="handleRecipeClick"
+            @click="handleRecipeClick(recipe.slug)"
             class="cursor-pointer"
           >
             <RecipeCard :recipe="recipe" :clickable="false" />
@@ -85,7 +85,7 @@
             <div 
               v-for="category in categories" 
               :key="category.id"
-              @click="handleCategoryClick"
+              @click="handleCategoryClick(category.slug)"
               class="category-card group cursor-pointer"
             >
               <div class="aspect-square bg-gradient-to-br from-primary-400 to-accent-400 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
@@ -134,15 +134,19 @@ const categories = ref([
   { id: 4, name: 'Desserts', slug: 'desserts', recipes_count: 15 }
 ])
 
-const handleRecipeClick = () => {
+const handleRecipeClick = (slug) => {
   if (!authStore.isAuthenticated) {
     navigateTo('/connexion')
+  } else {
+    navigateTo(`/recettes/${slug}`)
   }
 }
 
-const handleCategoryClick = () => {
+const handleCategoryClick = (slug) => {
   if (!authStore.isAuthenticated) {
     navigateTo('/connexion')
+  } else {
+    navigateTo(`/categories/${slug}`)
   }
 }
 
