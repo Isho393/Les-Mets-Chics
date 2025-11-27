@@ -12,7 +12,8 @@ export const useAuthStore = defineStore('auth', {
       const config = useRuntimeConfig()
       const { data, error } = await useFetch(`${config.public.apiBase}/register`, {
         method: 'POST',
-        body: credentials
+        body: credentials,
+        // Ne pas définir Content-Type pour FormData, le navigateur le fera automatiquement
       })
       
       if (error.value) throw error.value
@@ -96,6 +97,44 @@ export const useAuthStore = defineStore('auth', {
           this.fetchUser()
         }
       }
+    },
+
+    async updateProfile(formData) {
+      const config = useRuntimeConfig()
+      
+      const { data, error } = await useFetch(`${config.public.apiBase}/user/profile`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: formData
+      })
+      
+      if (error.value) throw error.value
+      
+      this.user = data.value.user
+      
+      if (process.client) {
+        localStorage.setItem('user', JSON.stringify(data.value.user))
+      }
+      
+      return data.value
+    },
+
+    async updatePassword(passwords) {
+      const config = useRuntimeConfig()
+      
+      const { data, error } = await useFetch(`${config.public.apiBase}/user/password`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${this.token}`
+        },
+        body: passwords
+      })
+      
+      if (error.value) throw error.value
+      
+      return data.value
     }
   }
 })

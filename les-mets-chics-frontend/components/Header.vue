@@ -20,8 +20,12 @@
           <NuxtLink to="/recettes" class="nav-link">Recettes</NuxtLink>
           
           <template v-if="authStore.isAuthenticated">
-            <NuxtLink to="/profil" class="nav-link">
-              <Icon name="mdi:account-circle" class="inline mr-1" />
+            <NuxtLink to="/profil" class="nav-link flex items-center gap-2">
+              <UserAvatar 
+                :avatar="authStore.user?.avatar" 
+                :name="authStore.user?.name || 'User'" 
+                size="sm" 
+              />
               {{ authStore.user?.name }}
             </NuxtLink>
             <button @click="handleLogout" class="btn-secondary">
@@ -48,7 +52,14 @@
           <NuxtLink to="/recettes" class="mobile-nav-link">Recettes</NuxtLink>
           
           <template v-if="authStore.isAuthenticated">
-            <NuxtLink to="/profil" class="mobile-nav-link">Mon Profil</NuxtLink>
+            <NuxtLink to="/profil" class="mobile-nav-link flex items-center gap-2">
+              <UserAvatar 
+                :avatar="authStore.user?.avatar" 
+                :name="authStore.user?.name || 'User'" 
+                size="sm" 
+              />
+              Mon Profil
+            </NuxtLink>
             <button @click="handleLogout" class="btn-secondary w-full">Déconnexion</button>
           </template>
           <template v-else>
