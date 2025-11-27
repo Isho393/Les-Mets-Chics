@@ -57,6 +57,9 @@ class AuthController extends Controller
             'status' => 'pending',
         ]);
 
+        // Déclencher l'événement pour notifier les admins
+        event(new \App\Events\UserRegistered($user));
+
         return response()->json([
             'message' => 'Inscription réussie. Votre compte est en attente de validation par un administrateur.',
             'user' => [
