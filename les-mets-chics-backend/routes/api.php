@@ -32,6 +32,7 @@ Route::post('/password/reset', [\App\Http\Controllers\Api\PasswordResetControlle
 // Google OAuth routes
 Route::get('/auth/google', [\App\Http\Controllers\Api\GoogleAuthController::class, 'redirectToGoogle']);
 Route::get('/auth/google/callback', [\App\Http\Controllers\Api\GoogleAuthController::class, 'handleGoogleCallback']);
+Route::get('/auth/google/test', [\App\Http\Controllers\Api\GoogleAuthController::class, 'testConfig']); // Route de test
 
 // Protected routes (require authentication with Sanctum)
 Route::middleware('auth:sanctum')->group(function () {

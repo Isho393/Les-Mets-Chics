@@ -193,3 +193,75 @@ Si vous lisez ce fichier, commencez par :
 ---
 
 **Besoin d'aide ?** Consultez d'abord [QUICK_START.md](QUICK_START.md) !
+
+
+## 🆕 Nouveaux documents (Novembre 2025)
+
+### Diagnostic et débogage Google OAuth
+- **[GOOGLE_OAUTH_DEBUG.md](GOOGLE_OAUTH_DEBUG.md)** - Guide complet de diagnostic
+  - Checklist de configuration
+  - Erreurs courantes et solutions
+  - Interprétation des logs
+  - Tests étape par étape
+  
+- **[GOOGLE_OAUTH_FIXED.md](GOOGLE_OAUTH_FIXED.md)** - Problèmes corrigés
+  - Problèmes identifiés
+  - Solutions implémentées
+  - Améliorations apportées
+  - Résultats des tests
+
+### Outil de test automatique
+- **`les-mets-chics-backend/test-google-oauth.php`** - Script de test
+  - Vérifie la configuration complète
+  - Teste les variables d'environnement
+  - Valide la base de données
+  - Vérifie les routes et fichiers
+  
+Usage :
+```bash
+cd les-mets-chics-backend
+php test-google-oauth.php
+```
+
+## 🔧 Améliorations récentes
+
+### Contrôleur Google OAuth amélioré
+- ✅ Logs détaillés à chaque étape
+- ✅ Gestion d'erreur spécifique par type
+- ✅ Messages d'erreur clairs
+- ✅ Vérification de configuration
+- ✅ Route de test : `/api/auth/google/test`
+
+### Nouveaux outils de diagnostic
+- ✅ Script de test automatique
+- ✅ Route de test de configuration
+- ✅ Documentation de débogage complète
+- ✅ Guide d'interprétation des logs
+
+## 🎯 Parcours pour résoudre un problème Google OAuth
+
+1. **Exécuter le script de test** (1 min)
+   ```bash
+   cd les-mets-chics-backend
+   php test-google-oauth.php
+   ```
+
+2. **Tester la configuration** (1 min)
+   ```
+   http://127.0.0.1:8000/api/auth/google/test
+   ```
+
+3. **Consulter les logs** (2 min)
+   ```bash
+   tail -f storage/logs/laravel.log
+   ```
+
+4. **Suivre le guide de diagnostic** (5 min)
+   - Lire **[GOOGLE_OAUTH_DEBUG.md](GOOGLE_OAUTH_DEBUG.md)**
+   - Vérifier la checklist
+   - Appliquer les solutions
+
+5. **Vérifier Google Cloud Console** (5 min)
+   - URI de redirection correcte
+   - Credentials valides
+   - API activée
