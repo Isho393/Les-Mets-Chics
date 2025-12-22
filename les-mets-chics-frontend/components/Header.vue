@@ -103,7 +103,7 @@ const handleLogout = async () => {
 }
 
 .btn-primary {
-  @apply bg-gradient-to-r from-primary-500 to-accent-500 text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all;
+  @apply bg-[#A3C9A8] text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all;
 }
 
 .btn-secondary {

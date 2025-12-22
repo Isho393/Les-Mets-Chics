@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen">
     <Header />
-    <GuestBanner />
+    <!-- <GuestBanner /> -->
     <main>
       <slot />
     </main>
