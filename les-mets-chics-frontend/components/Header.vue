@@ -5,7 +5,7 @@
         <!-- Logo -->
         <NuxtLink to="/" class="flex items-center space-x-3 group">
           <div class="w-12 h-12 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform">
-            <Icon name="mdi:chef-hat" class="text-white text-2xl" />
+            <img src="../public/lmc.png" alt="logo du blog" class="rounded-full">            
           </div>
           <div>
             <h1 class="text-2xl font-serif font-bold text-primary-900">Les Mets Chics</h1>
@@ -33,8 +33,8 @@
             </button>
           </template>
           <template v-else>
-            <NuxtLink to="/connexion" class="btn-secondary">Connexion</NuxtLink>
             <NuxtLink to="/inscription" class="btn-primary">Inscription</NuxtLink>
+            <NuxtLink to="/connexion" class="btn-secondary">Connexion</NuxtLink>
           </template>
         </div>
 
@@ -63,8 +63,8 @@
             <button @click="handleLogout" class="btn-secondary w-full">Déconnexion</button>
           </template>
           <template v-else>
-            <NuxtLink to="/connexion" class="btn-secondary w-full text-center">Connexion</NuxtLink>
             <NuxtLink to="/inscription" class="btn-primary w-full text-center">Inscription</NuxtLink>
+            <NuxtLink to="/connexion" class="btn-secondary w-full text-center">Connexion</NuxtLink>
           </template>
         </div>
       </div>
@@ -103,10 +103,10 @@ const handleLogout = async () => {
 }
 
 .btn-primary {
-  @apply bg-[#A3C9A8] text-white px-6 py-2.5 rounded-full font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all;
+  @apply text-gray-800 border border-black/10 px-6 py-2.5 rounded-full font-medium hover:shadow-lg transform hover:-translate-y-0.5 transition-all;
 }
 
 .btn-secondary {
-  @apply border-2 border-primary-500 text-primary-700 px-6 py-2 rounded-full font-medium hover:bg-primary-50 transition-colors;
+  @apply border border-black/10 text-emerald-900 bg-green-100 px-6 py-2 rounded-full font-medium hover:bg-green-200 transition-colors;
 }
 </style>
