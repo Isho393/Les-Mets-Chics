@@ -1,86 +1,181 @@
 <template>
-  <component 
-    :is="clickable ? 'NuxtLink' : 'div'"
-    :to="clickable ? `/recettes/${recipe.slug}` : undefined"
-    class="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all transform hover:-translate-y-2"
+  <div 
+    :class="cardClasses"
+    @mouseenter="handleHover(true)"
+    @mouseleave="handleHover(false)"
   >
-    <!-- Image -->
-    <div class="relative h-64 overflow-hidden bg-primary-100">
+    <!-- Image Container -->
+    <div class="relative overflow-hidden" :class="imageContainerClasses">
       <img 
-        :src="recipe.main_image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800'" 
-        :alt="recipe.title"
-        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+        :src="image || recipe?.main_image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800'" 
+        :alt="title || recipe?.title"
+        class="w-full h-full object-cover transition-transform duration-700 ease-out"
+        :class="{ 'scale-110': isHovered }"
+        loading="lazy"
       />
-      <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-medium text-primary-900">
-        {{ recipe.category.name }}
+      
+      <!-- Overlay Gradient -->
+      <div class="absolute inset-0 bg-gradient-to-t from-charcoal-900/60 via-transparent to-transparent opacity-0 transition-opacity duration-300"
+           :class="{ 'opacity-100': isHovered }" />
+      
+      <!-- Badge/Category -->
+      <div v-if="category || recipe?.category?.name" class="absolute top-4 left-4">
+        <span class="px-3 py-1 bg-white/90 backdrop-blur-sm text-bordeaux-800 text-sm font-medium rounded-full">
+          {{ category || recipe?.category?.name }}
+        </span>
       </div>
+      
+      <!-- Like Button -->
+      <button v-if="showLike" 
+              class="absolute top-4 right-4 p-2 bg-white/90 backdrop-blur-sm rounded-full transition-all duration-300 hover:bg-white hover:scale-110"
+              @click.stop="$emit('like')">
+        <Icon name="lucide:heart" :class="liked ? 'text-bordeaux-800 fill-current' : 'text-charcoal-600'" />
+      </button>
     </div>
-
+    
     <!-- Content -->
-    <div class="p-6">
-      <h3 class="text-xl font-serif font-bold text-primary-900 mb-2 group-hover:text-accent-600 transition-colors">
-        {{ recipe.title }}
+    <div :class="contentClasses">
+      <!-- Title -->
+      <h3 class="font-display text-xl font-semibold text-charcoal-900 mb-2 line-clamp-2">
+        {{ title || recipe?.title }}
       </h3>
       
-      <p class="text-primary-600 text-sm mb-4 line-clamp-2">
-        {{ recipe.description }}
+      <!-- Description -->
+      <p v-if="description || recipe?.description" class="text-charcoal-600 text-sm mb-4 line-clamp-3">
+        {{ description || recipe?.description }}
       </p>
-
+      
       <!-- Meta Info -->
-      <div class="flex items-center justify-between text-sm text-primary-500 mb-4">
-        <div class="flex items-center space-x-4">
-          <span v-if="recipe.prep_time" class="flex items-center">
-            <Icon name="mdi:clock-outline" class="mr-1" />
-            {{ recipe.prep_time }}min
-          </span>
-          <span v-if="recipe.servings" class="flex items-center">
-            <Icon name="mdi:account-group" class="mr-1" />
-            {{ recipe.servings }} pers.
-          </span>
+      <div v-if="showMeta" class="flex items-center gap-4 text-xs text-charcoal-500 mb-4">
+        <div v-if="prepTime || recipe?.prep_time" class="flex items-center gap-1">
+          <Icon name="lucide:clock" class="w-3 h-3" />
+          <span>{{ prepTime || recipe?.prep_time }}{{ recipe?.prep_time && !String(recipe.prep_time).includes('min') ? 'min' : '' }}</span>
+        </div>
+        <div v-if="servings || recipe?.servings" class="flex items-center gap-1">
+          <Icon name="lucide:users" class="w-3 h-3" />
+          <span>{{ servings || recipe?.servings }} pers.</span>
+        </div>
+        <div v-if="difficulty" class="flex items-center gap-1">
+          <Icon name="lucide:chef-hat" class="w-3 h-3" />
+          <span>{{ difficulty }}</span>
         </div>
       </div>
-
-      <!-- Author & Stats -->
-      <div class="flex items-center justify-between pt-4 border-t border-primary-100">
-        <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-gradient-to-r from-gray-900 to-accent-500 rounded-full flex items-center justify-center">
-            <Icon name="mdi:account" class="text-white text-xl" />
-          </div>
-          <span class="text-sm text-primary-700 font-medium">{{ recipe.author.name }}</span>
-        </div>
-        
-        <div class="flex items-center space-x-3 text-primary-500">
-          <span class="flex items-center text-sm">
-            <Icon name="mdi:heart" class="mr-1 text-red-500" />
-            {{ recipe.likes_count }}
-          </span>
-          <span class="flex items-center text-sm">
-            <Icon name="mdi:comment" class="mr-1" />
-            {{ recipe.comments_count }}
-          </span>
+      
+      <!-- Author -->
+      <div v-if="author || recipe?.author" class="flex items-center gap-3">
+        <UserAvatar 
+          :avatar="author?.avatar || recipe?.author?.avatar" 
+          :name="author?.name || recipe?.author?.name" 
+          size="sm" 
+        />
+        <div>
+          <p class="text-sm font-medium text-charcoal-800">{{ author?.name || recipe?.author?.name }}</p>
+          <p v-if="publishedAt || recipe?.published_at" class="text-xs text-charcoal-500">{{ formatDate(publishedAt || recipe?.published_at) }}</p>
         </div>
       </div>
     </div>
-  </component>
+  </div>
 </template>
 
 <script setup>
-defineProps({
-  recipe: {
-    type: Object,
-    required: true
+import { ref, computed } from 'vue'
+
+const props = defineProps({
+  // Nouvelle API (props individuelles)
+  title: String,
+  description: String,
+  image: String,
+  category: String,
+  prepTime: String,
+  servings: [String, Number],
+  difficulty: String,
+  publishedAt: String,
+  author: Object,
+  liked: Boolean,
+  
+  // Ancienne API (objet recipe)
+  recipe: Object,
+  
+  // Options
+  showLike: { type: Boolean, default: true },
+  showMeta: { type: Boolean, default: true },
+  clickable: { type: Boolean, default: true },
+  
+  // Variantes
+  variant: {
+    type: String,
+    default: 'default',
+    validator: (value) => ['default', 'featured', 'compact'].includes(value)
   },
-  clickable: {
-    type: Boolean,
-    default: true
+  
+  // Layout
+  aspectRatio: {
+    type: String,
+    default: '4/3',
+    validator: (value) => ['1/1', '4/3', '16/9', '3/4'].includes(value)
   }
 })
+
+const emit = defineEmits(['like'])
+
+const isHovered = ref(false)
+
+const handleHover = (hovered) => {
+  isHovered.value = hovered
+}
+
+const cardClasses = computed(() => {
+  const baseClasses = [
+    'group bg-white rounded-2xl overflow-hidden',
+    'transition-all duration-500 ease-out',
+    'hover:shadow-premium hover:-translate-y-2'
+  ]
+  
+  const variants = {
+    default: ['shadow-soft'],
+    featured: ['shadow-premium border border-gold-200'],
+    compact: ['shadow-soft']
+  }
+  
+  return [...baseClasses, ...variants[props.variant]].join(' ')
+})
+
+const imageContainerClasses = computed(() => {
+  const aspectRatios = {
+    '1/1': 'aspect-square',
+    '4/3': 'aspect-[4/3]',
+    '16/9': 'aspect-video',
+    '3/4': 'aspect-[3/4]'
+  }
+  
+  return aspectRatios[props.aspectRatio] || 'aspect-[4/3]'
+})
+
+const contentClasses = computed(() => {
+  return props.variant === 'compact' ? 'p-4' : 'p-6'
+})
+
+const formatDate = (date) => {
+  if (!date) return ''
+  return new Date(date).toLocaleDateString('fr-FR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  })
+}
 </script>
 
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
