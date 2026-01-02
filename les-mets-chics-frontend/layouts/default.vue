@@ -1,9 +1,20 @@
 <template>
   <div class="min-h-screen bg-cream-100 font-body">
-    <Header />
+    <!-- Header Principal -->
+    <MainHeader />
+    
+    <!-- Breadcrumbs -->
+    <Breadcrumbs />
+    
+    <!-- Main Content -->
     <main class="relative">
       <slot />
     </main>
+    
+    <!-- Actions Contextuelles -->
+    <PageActions />
+    
+    <!-- Footer -->
     <Footer />
     
     <!-- Notifications globales -->

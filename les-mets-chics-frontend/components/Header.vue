@@ -1,9 +1,8 @@
 <template>
-  <!-- Header conditionnel selon l'état d'authentification -->
-  <GuestHeader v-if="!isAuthenticated" />
-  <AuthHeader v-else />
+  <!-- Header unifié responsive -->
+  <ui-responsive-header />
 </template>
 
 <script setup>
-const { isAuthenticated } = useAuth()
+// Le header gère maintenant automatiquement le responsive
 </script>

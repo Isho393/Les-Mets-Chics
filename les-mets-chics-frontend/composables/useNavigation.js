@@ -1,163 +1,153 @@
 export const useNavigation = () => {
-  const { isAuthenticated, isActive, isPending, userRole } = useAuth()
-  const router = useRouter()
+  const { user, isAuthenticated, isActive, isPending, isAdmin, isAuthor } = useAuth()
   const route = useRoute()
 
-  // Routes publiques (accessibles sans authentification)
-  const publicRoutes = [
-    '/',
-    '/connexion',
-    '/inscription',
-    '/en-attente',
-    '/a-propos',
-    '/contact',
-    '/cgv',
-    '/confidentialite',
-    '/mentions-legales',
-    '/mot-de-passe-oublie',
-    '/reinitialiser-mot-de-passe'
-  ]
+  // Menus principaux selon le rôle
+  const getMainMenuItems = () => {
+    const baseItems = [
+      { name: 'Accueil', path: '/', icon: 'lucide:home' }
+    ]
 
-  // Routes qui nécessitent une authentification
-  const protectedRoutes = [
-    '/recettes',
-    '/categories',
-    '/profil'
-  ]
-
-  // Vérification si une route est publique
-  const isPublicRoute = (path) => {
-    return publicRoutes.some(route => {
-      if (route === '/') return path === '/'
-      return path.startsWith(route)
-    })
-  }
-
-  // Vérification si une route est protégée
-  const isProtectedRoute = (path) => {
-    return protectedRoutes.some(route => path.startsWith(route))
-  }
-
-  // Navigation sécurisée vers une recette
-  const navigateToRecipe = async (slug) => {
     if (!isAuthenticated.value) {
-      await router.push('/connexion')
-      return
+      return [
+        ...baseItems,
+        { name: 'Recettes', path: '/connexion', icon: 'lucide:chef-hat', requiresAuth: true },
+        { name: 'Origines', path: '/connexion', icon: 'lucide:globe', requiresAuth: true },
+        { name: 'À propos', path: '/a-propos', icon: 'lucide:info' }
+      ]
     }
 
     if (isPending.value) {
-      await router.push('/en-attente')
-      return
+      return [
+        ...baseItems,
+        { name: 'Statut du compte', path: '/en-attente', icon: 'lucide:clock' }
+      ]
     }
 
-    await router.push(`/recettes/${slug}`)
+    if (isActive.value) {
+      const items = [
+        ...baseItems,
+        { name: 'Recettes', path: '/recettes', icon: 'lucide:chef-hat' },
+        { name: 'Origines', path: '/categories', icon: 'lucide:globe' }
+      ]
+
+      // Ajout selon le rôle
+      if (isAdmin.value) {
+        items.push({ name: 'Panel Admin', path: '/admin', icon: 'lucide:settings', external: true })
+      } else if (isAuthor.value) {
+        items.push({ name: 'Mon Dashboard', path: '/admin', icon: 'lucide:layout-dashboard', external: true })
+      }
+
+      return items
+    }
+
+    return baseItems
   }
 
-  // Navigation sécurisée vers une catégorie
-  const navigateToCategory = async (slug) => {
-    if (!isAuthenticated.value) {
-      await router.push('/connexion')
-      return
-    }
+  // Menu utilisateur (dropdown profil)
+  const getUserMenuItems = () => {
+    if (!isAuthenticated.value) return []
 
-    if (isPending.value) {
-      await router.push('/en-attente')
-      return
-    }
+    const items = [
+      { name: 'Mon Profil', path: '/profil', icon: 'lucide:user' }
+    ]
 
-    await router.push(`/categories/${slug}`)
-  }
-
-  // Navigation vers le panel admin selon le rôle
-  const navigateToAdmin = () => {
-    const config = useRuntimeConfig()
-    const adminUrl = `${config.public.apiBase.replace('/api', '')}/admin`
-    
-    if (userRole.value === 'admin' || userRole.value === 'auteur') {
-      window.open(adminUrl, '_blank')
-    }
-  }
-
-  // Redirection après connexion selon le rôle et le statut
-  const redirectAfterLogin = async () => {
-    if (isPending.value) {
-      await router.push('/en-attente')
-      return
-    }
-
-    // Rediriger vers la page demandée initialement ou vers l'accueil
-    const redirectTo = route.query.redirect || '/recettes'
-    await router.push(redirectTo)
-  }
-
-  // Vérification des permissions pour une action
-  const canPerformAction = (action) => {
-    if (!isAuthenticated.value || !isActive.value) {
-      return false
-    }
-
-    switch (action) {
-      case 'like':
-      case 'comment':
-        return true
-      case 'admin':
-        return userRole.value === 'admin' || userRole.value === 'auteur'
-      default:
-        return false
-    }
-  }
-
-  // Gestion des clics sur les recettes (pour visiteurs)
-  const handleRecipeClick = async (slug) => {
-    if (isAuthenticated.value && isActive.value) {
-      await router.push(`/recettes/${slug}`)
-    } else {
-      // Stocker la destination pour redirection après connexion
-      await router.push({
-        path: '/connexion',
-        query: { redirect: `/recettes/${slug}` }
+    if (isActive.value && (isAdmin.value || isAuthor.value)) {
+      items.push({ 
+        name: isAdmin.value ? 'Panel Admin' : 'Dashboard', 
+        path: '/admin', 
+        icon: 'lucide:external-link',
+        external: true 
       })
     }
+
+    items.push({ name: 'Déconnexion', action: 'logout', icon: 'lucide:log-out' })
+
+    return items
   }
 
-  // Navigation du breadcrumb
-  const getBreadcrumb = () => {
-    const path = route.path
-    const breadcrumb = [{ name: 'Accueil', path: '/' }]
+  // Breadcrumbs dynamiques
+  const getBreadcrumbs = () => {
+    const segments = route.path.split('/').filter(Boolean)
+    const breadcrumbs = [{ name: 'Accueil', path: '/' }]
 
-    if (path.startsWith('/recettes/')) {
-      breadcrumb.push({ name: 'Recettes', path: '/recettes' })
-      if (route.params.slug) {
-        breadcrumb.push({ name: 'Détail', path: path })
+    let currentPath = ''
+    segments.forEach((segment, index) => {
+      currentPath += `/${segment}`
+      
+      let name = segment.charAt(0).toUpperCase() + segment.slice(1)
+      
+      // Noms personnalisés
+      const customNames = {
+        'recettes': 'Recettes',
+        'categories': 'Origines',
+        'profil': 'Mon Profil',
+        'a-propos': 'À propos'
       }
-    } else if (path.startsWith('/categories/')) {
-      breadcrumb.push({ name: 'Catégories', path: '/categories' })
-      if (route.params.slug) {
-        breadcrumb.push({ name: 'Catégorie', path: path })
+      
+      if (customNames[segment]) {
+        name = customNames[segment]
       }
-    } else if (path === '/profil') {
-      breadcrumb.push({ name: 'Mon Profil', path: '/profil' })
+
+      breadcrumbs.push({
+        name,
+        path: currentPath,
+        isLast: index === segments.length - 1
+      })
+    })
+
+    return breadcrumbs
+  }
+
+  // Actions contextuelles par page
+  const getPageActions = () => {
+    const path = route.path
+
+    if (path.startsWith('/recettes/') && path !== '/recettes') {
+      return [
+        { name: 'J\'aime', action: 'like', icon: 'lucide:heart', requiresAuth: true },
+        { name: 'Commenter', action: 'comment', icon: 'lucide:message-circle', requiresAuth: true },
+        { name: 'Partager', action: 'share', icon: 'lucide:share-2' }
+      ]
     }
 
-    return breadcrumb
+    if (path.startsWith('/categories/')) {
+      return [
+        { name: 'Filtrer', action: 'filter', icon: 'lucide:filter' },
+        { name: 'Trier', action: 'sort', icon: 'lucide:arrow-up-down' }
+      ]
+    }
+
+    return []
+  }
+
+  // Navigation après connexion
+  const redirectAfterLogin = async () => {
+    if (isPending.value) {
+      await navigateTo('/en-attente')
+    } else if (isActive.value) {
+      const redirect = route.query.redirect || '/recettes'
+      await navigateTo(redirect)
+    }
+  }
+
+  // Vérification d'accès aux pages
+  const canAccessPage = (path) => {
+    const protectedPaths = ['/recettes', '/categories', '/profil']
+    
+    if (protectedPaths.some(p => path.startsWith(p))) {
+      return isAuthenticated.value && isActive.value
+    }
+    
+    return true
   }
 
   return {
-    // Vérifications
-    isPublicRoute,
-    isProtectedRoute,
-    canPerformAction,
-
-    // Navigation
-    navigateToRecipe,
-    navigateToCategory,
-    navigateToAdmin,
+    getMainMenuItems,
+    getUserMenuItems,
+    getBreadcrumbs,
+    getPageActions,
     redirectAfterLogin,
-    handleRecipeClick,
-
-    // Utilitaires
-    getBreadcrumb,
-    publicRoutes,
-    protectedRoutes
+    canAccessPage
   }
 }

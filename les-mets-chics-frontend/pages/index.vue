@@ -1,265 +1,230 @@
 <template>
-  <div class="overflow-hidden">
+  <div class="min-h-screen">
     
-    <!-- Hero Section Simplifié -->
-    <section class="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
-      <!-- Background -->
-      <div class="absolute inset-0 z-0">
-        <div class="w-full h-full bg-gradient-to-br from-bordeaux-900 via-bordeaux-800 to-charcoal-900 opacity-95"></div>
-        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80')] bg-cover bg-center mix-blend-overlay opacity-30"></div>
-      </div>
-      
-      <!-- Hero Content -->
-      <div class="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
-        <div class="animate-fade-in">
-          <!-- Badge Premium -->
-          <div class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full text-cream-100 text-sm font-medium mb-8">
-            <Icon name="lucide:sparkles" class="w-4 h-4 text-gold-400" />
-            Gastronomie d'exception
-          </div>
-          
-          <!-- Titre Principal -->
-          <h1 class="font-display text-4xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
-            Les Mets
-            <span class="bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent">
-              Chics
-            </span>
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-br from-cream-50 to-bordeaux-50 py-20 lg:py-32">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+          <h1 class="text-4xl md:text-6xl font-display font-bold text-bordeaux-900 mb-6 animate-fade-in-up">
+            Les Mets Chics
           </h1>
-          
-          <!-- Sous-titre -->
-          <p class="text-xl sm:text-2xl text-cream-200 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Découvrez une collection raffinée de recettes gastronomiques créées par des chefs d'exception
+          <p class="text-xl md:text-2xl text-charcoal-600 mb-8 max-w-3xl mx-auto animate-fade-in-up" style="animation-delay: 0.2s">
+            Découvrez des recettes gastronomiques raffinées du monde entier
           </p>
           
           <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <ui-button 
-              variant="gold" 
-              size="lg"
-              class="group"
-              @click="scrollToRecipes"
+          <div class="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style="animation-delay: 0.4s">
+            <NuxtLink 
+              v-if="!isAuthenticated"
+              to="/connexion"
+              class="btn-primary-lg"
             >
-              <Icon name="lucide:chef-hat" class="group-hover:rotate-12 transition-transform duration-300" />
+              <Icon name="lucide:chef-hat" class="mr-2" />
               Découvrir les recettes
-            </ui-button>
-            <ui-button 
-              variant="outline" 
-              size="lg"
-              class="border-white/30 text-white hover:bg-white hover:text-bordeaux-800"
-              tag="NuxtLink"
-              to="/inscription"
+            </NuxtLink>
+            <NuxtLink 
+              v-else
+              to="/recettes"
+              class="btn-primary-lg"
             >
-              <Icon name="lucide:user-plus" />
-              Rejoindre la communauté
-            </ui-button>
+              <Icon name="lucide:chef-hat" class="mr-2" />
+              Voir toutes les recettes
+            </NuxtLink>
+            <NuxtLink 
+              to="/a-propos"
+              class="btn-outline-lg"
+            >
+              En savoir plus
+            </NuxtLink>
           </div>
-        </div>
-        
-        <!-- Scroll Indicator -->
-        <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <Icon name="lucide:chevron-down" class="w-6 h-6 text-white/60" />
         </div>
       </div>
     </section>
 
-    <!-- Section Recettes (Aperçu limité) -->
-    <section ref="recipesSection" class="py-20 bg-cream-50">
+    <!-- Aperçu des recettes -->
+    <section class="py-16 bg-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        <!-- Header Section -->
-        <div class="text-center mb-16">
-          <h2 class="font-display text-4xl lg:text-5xl font-bold text-bordeaux-800 mb-6">
-            Nos Créations
-            <span class="text-gold-700">Signature</span>
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-bordeaux-900 mb-4">
+            Recettes Populaires
           </h2>
-          <p class="text-xl text-charcoal-600 max-w-3xl mx-auto leading-relaxed mb-8">
-            Un aperçu de nos recettes exclusives. Connectez-vous pour découvrir tous les détails, ingrédients et techniques.
+          <p class="text-lg text-charcoal-600 max-w-2xl mx-auto">
+            Un aperçu de nos créations culinaires les plus appréciées
           </p>
-          
-          <!-- Teasing Banner -->
-          <div class="bg-gradient-to-r from-bordeaux-50 to-gold-50 rounded-2xl p-6 mb-12 max-w-2xl mx-auto">
-            <div class="flex items-center justify-center gap-3 mb-3">
-              <Icon name="lucide:lock" class="w-5 h-5 text-bordeaux-700" />
-              <span class="font-semibold text-bordeaux-800">Contenu exclusif</span>
-            </div>
-            <p class="text-charcoal-600 text-sm mb-4">
-              Accédez aux recettes complètes, vidéos, techniques et rejoignez notre communauté de gourmets
-            </p>
-            <div class="flex gap-2 justify-center">
-              <ui-button variant="primary" size="sm" tag="NuxtLink" to="/inscription">
-                Créer un compte
-              </ui-button>
-              <ui-button variant="ghost" size="sm" tag="NuxtLink" to="/connexion">
-                Se connecter
-              </ui-button>
-            </div>
-          </div>
         </div>
 
-        <!-- Recettes Grid (Aperçu seulement) -->
-        <div v-if="loading" class="mb-12">
-          <ui-skeleton-loader type="recipe-grid" :count="6" />
+        <!-- Grille de recettes -->
+        <div v-if="featuredRecipes.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <RecipeCard 
+            v-for="recipe in featuredRecipes" 
+            :key="recipe.id"
+            :recipe="recipe"
+            :show-actions="false"
+            @click="handleRecipeClick(recipe)"
+          />
         </div>
         
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          <div
-            v-for="recipe in publicRecipes"
-            :key="recipe.id"
-            class="group cursor-pointer transform transition-all duration-300 hover:scale-105"
-            @click="handleRecipeClick(recipe.slug)"
-          >
-            <RecipePreview
-              :title="recipe.title"
-              :description="recipe.description"
-              :image="recipe.main_image_url || recipe.image"
-              :category="recipe.category?.name || recipe.category"
-              :prep-time="recipe.prep_time"
-              :author="recipe.author?.name || recipe.author"
-            />
-          </div>
+        <!-- État de chargement -->
+        <div v-else-if="loading" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <ui-skeleton-loader v-for="i in 6" :key="i" class="h-80" />
+        </div>
+        
+        <!-- Aucune recette -->
+        <div v-else class="text-center py-12">
+          <Icon name="lucide:chef-hat" class="text-6xl text-charcoal-300 mb-4" />
+          <p class="text-charcoal-500">Aucune recette disponible pour le moment</p>
         </div>
 
-        <!-- CTA Section -->
-        <div class="text-center">
-          <div v-if="loading" class="max-w-md mx-auto">
-            <ui-skeleton-loader type="custom" custom-classes="bg-white rounded-2xl shadow-premium p-8">
-              <div class="space-y-4">
-                <div class="w-12 h-12 bg-cream-200 rounded-full mx-auto"></div>
-                <div class="h-6 bg-cream-200 rounded w-3/4 mx-auto"></div>
-                <div class="h-4 bg-cream-200 rounded w-full"></div>
-                <div class="h-12 bg-cream-200 rounded-xl w-full mt-6"></div>
-              </div>
-            </ui-skeleton-loader>
-          </div>
-          
-          <div v-else class="bg-white rounded-2xl shadow-premium p-8 max-w-md mx-auto">
-            <Icon name="lucide:chef-hat" class="w-12 h-12 text-bordeaux-700 mx-auto mb-4" />
-            <h3 class="font-display text-2xl font-bold text-bordeaux-800 mb-3">
-              Plus de {{ totalRecipes }}+ recettes vous attendent
-            </h3>
-            <p class="text-charcoal-600 mb-6">
-              Techniques détaillées, vidéos exclusives, et une communauté passionnée
-            </p>
-            <ui-button 
-              variant="primary" 
-              size="lg"
-              full-width
-              tag="NuxtLink"
-              to="/inscription"
-            >
-              Commencer gratuitement
-              <Icon name="lucide:arrow-right" />
-            </ui-button>
-            <p class="text-xs text-charcoal-500 mt-3">
-              Déjà membre ? 
-              <NuxtLink to="/connexion" class="text-bordeaux-700 hover:text-bordeaux-800 font-medium">
-                Se connecter
-              </NuxtLink>
-            </p>
+        <!-- Bouton voir plus -->
+        <div class="text-center mt-12">
+          <NuxtLink 
+            v-if="!isAuthenticated"
+            to="/connexion"
+            class="btn-primary"
+          >
+            Voir toutes les recettes
+          </NuxtLink>
+          <NuxtLink 
+            v-else
+            to="/recettes"
+            class="btn-primary"
+          >
+            Voir toutes les recettes
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
+
+    <!-- Origines culinaires -->
+    <section class="py-16 bg-cream-50">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-display font-bold text-bordeaux-900 mb-4">
+            Origines Culinaires
+          </h2>
+          <p class="text-lg text-charcoal-600 max-w-2xl mx-auto">
+            Explorez les saveurs authentiques du monde entier
+          </p>
+        </div>
+
+        <!-- Grille des catégories -->
+        <div v-if="categories.length > 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div 
+            v-for="category in categories" 
+            :key="category.id"
+            @click="handleCategoryClick(category)"
+            class="category-card group cursor-pointer"
+          >
+            <div class="aspect-square bg-gradient-to-br from-bordeaux-100 to-bordeaux-200 rounded-2xl p-6 flex flex-col items-center justify-center text-center hover-lift">
+              <Icon name="lucide:globe" class="text-4xl text-bordeaux-600 mb-3 group-hover:scale-110 transition-transform" />
+              <h3 class="font-display font-semibold text-bordeaux-900 mb-2">{{ category.name }}</h3>
+              <p class="text-sm text-charcoal-600">{{ category.recipes_count || 0 }} recettes</p>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Section À Propos (Simplifiée) -->
-    <section class="py-20 bg-white">
+    <!-- CTA Final -->
+    <section class="py-16 bg-bordeaux-900 text-white">
       <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 class="font-display text-4xl lg:text-5xl font-bold text-bordeaux-800 mb-6">
-          L'Art de la
-          <span class="text-gold-700">Gastronomie</span>
+        <h2 class="text-3xl md:text-4xl font-display font-bold mb-6">
+          Rejoignez notre communauté gourmande
         </h2>
-        <p class="text-xl text-charcoal-600 mb-8 leading-relaxed max-w-2xl mx-auto">
-          Chez Les Mets Chics, nous croyons que la cuisine est un art qui unit les cultures et éveille les émotions. Chaque recette est une invitation au voyage gustatif.
+        <p class="text-xl text-bordeaux-100 mb-8">
+          Accédez à des centaines de recettes exclusives et partagez vos créations
         </p>
-        
-        <ui-button 
-          variant="outline" 
-          size="lg"
-          tag="NuxtLink"
-          to="/a-propos"
+        <NuxtLink 
+          v-if="!isAuthenticated"
+          to="/inscription"
+          class="btn-white-lg"
         >
-          En savoir plus
-          <Icon name="lucide:arrow-right" />
-        </ui-button>
+          <Icon name="lucide:user-plus" class="mr-2" />
+          Créer mon compte
+        </NuxtLink>
       </div>
     </section>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
-
-const { handleRecipeClick } = useNavigation()
-const recipesStore = useRecipesStore()
+const { isAuthenticated } = useAuth()
 
 // SEO
 useHead({
-  title: 'Les Mets Chics - Gastronomie Raffinée & Recettes d\'Exception',
+  title: 'Les Mets Chics - Recettes Gastronomiques Raffinées',
   meta: [
-    { name: 'description', content: 'Découvrez une collection exclusive de recettes gastronomiques raffinées. Les Mets Chics vous invite à un voyage culinaire d\'exception.' }
+    { name: 'description', content: 'Découvrez des recettes gastronomiques raffinées du monde entier. Rejoignez notre communauté de passionnés de cuisine.' }
   ]
 })
 
-// Refs
-const recipesSection = ref(null)
-const publicRecipes = ref([])
-const totalRecipes = ref(150)
+// État
 const loading = ref(true)
+const featuredRecipes = ref([])
+const categories = ref([])
 
-// Methods
-const scrollToRecipes = () => {
-  recipesSection.value?.scrollIntoView({ behavior: 'smooth' })
-}
-
-const loadPublicRecipes = async () => {
+// Charger les données
+onMounted(async () => {
   try {
-    loading.value = true
-    const recipes = await recipesStore.fetchPublicRecipes()
-    // Limiter à 6 recettes pour l'aperçu
-    publicRecipes.value = recipes.slice(0, 6)
-    totalRecipes.value = recipes.length
-  } catch (error) {
-    console.error('Erreur lors du chargement des recettes:', error)
-    // Fallback avec données statiques
-    publicRecipes.value = [
-      {
-        id: 1,
-        title: 'Risotto aux Truffes Noires',
-        description: 'Un classique revisité avec des truffes du Périgord',
-        image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        category: 'Plats principaux',
-        prep_time: '45 min',
-        author: 'Chef Laurent',
-        slug: 'risotto-truffes-noires'
-      },
-      {
-        id: 2,
-        title: 'Soufflé au Grand Marnier',
-        description: 'Dessert aérien parfumé à la liqueur d\'orange',
-        image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        category: 'Desserts',
-        prep_time: '30 min',
-        author: 'Chef Marie',
-        slug: 'souffle-grand-marnier'
-      },
-      {
-        id: 3,
-        title: 'Tataki de Thon Rouge',
-        description: 'Thon rouge saisi aux graines de sésame',
-        image: 'https://images.unsplash.com/photo-1579952363873-27d3bfad9c0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-        category: 'Entrées',
-        prep_time: '20 min',
-        author: 'Chef Tanaka',
-        slug: 'tataki-thon-rouge'
-      }
+    // Simuler le chargement des recettes populaires
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    // Ici vous feriez les vrais appels API
+    featuredRecipes.value = [
+      { id: 1, title: 'Coq au Vin', image: '/placeholder-recipe.jpg', category: 'Française' },
+      { id: 2, title: 'Sushi Traditionnel', image: '/placeholder-recipe.jpg', category: 'Japonaise' },
+      { id: 3, title: 'Pasta Carbonara', image: '/placeholder-recipe.jpg', category: 'Italienne' }
     ]
+    
+    categories.value = [
+      { id: 1, name: 'Française', slug: 'francaise', recipes_count: 25 },
+      { id: 2, name: 'Japonaise', slug: 'japonaise', recipes_count: 18 },
+      { id: 3, name: 'Italienne', slug: 'italienne', recipes_count: 22 },
+      { id: 4, name: 'Méditerranéenne', slug: 'mediterraneenne', recipes_count: 15 }
+    ]
+  } catch (error) {
+    console.error('Erreur lors du chargement:', error)
   } finally {
     loading.value = false
   }
+})
+
+// Actions
+const handleRecipeClick = (recipe) => {
+  if (!isAuthenticated.value) {
+    navigateTo(`/connexion?redirect=${encodeURIComponent(`/recettes/${recipe.slug || recipe.id}`)}`)
+  } else {
+    navigateTo(`/recettes/${recipe.slug || recipe.id}`)
+  }
 }
 
-// Lifecycle
-onMounted(() => {
-  loadPublicRecipes()
-})
+const handleCategoryClick = (category) => {
+  if (!isAuthenticated.value) {
+    navigateTo(`/connexion?redirect=${encodeURIComponent(`/categories/${category.slug}`)}`)
+  } else {
+    navigateTo(`/categories/${category.slug}`)
+  }
+}
 </script>
+
+<style scoped>
+.btn-primary-lg {
+  @apply px-8 py-4 bg-bordeaux-600 text-white rounded-xl hover:bg-bordeaux-700 transition-colors font-semibold text-lg flex items-center justify-center;
+}
+
+.btn-outline-lg {
+  @apply px-8 py-4 border-2 border-bordeaux-600 text-bordeaux-600 rounded-xl hover:bg-bordeaux-600 hover:text-white transition-colors font-semibold text-lg;
+}
+
+.btn-primary {
+  @apply px-6 py-3 bg-bordeaux-600 text-white rounded-lg hover:bg-bordeaux-700 transition-colors font-medium;
+}
+
+.btn-white-lg {
+  @apply px-8 py-4 bg-white text-bordeaux-900 rounded-xl hover:bg-cream-50 transition-colors font-semibold text-lg flex items-center justify-center;
+}
+
+.category-card {
+  @apply transition-all duration-300;
+}
+</style>
