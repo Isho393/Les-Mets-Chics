@@ -15,7 +15,7 @@
     <PageActions />
     
     <!-- Footer -->
-    <Footer />
+    <FooterPremium />
     
     <!-- Notifications globales -->
     <ui-global-notifications />
