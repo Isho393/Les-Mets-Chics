@@ -1,49 +1,42 @@
 <template>
   <Teleport to="body">
-    <div class="fixed top-4 right-4 z-50 space-y-3 max-w-sm">
+    <div class="fixed top-4 right-4 z-[9999] space-y-3">
       <TransitionGroup
-        enter-active-class="transition ease-out duration-300"
-        enter-from-class="opacity-0 translate-x-full"
-        enter-to-class="opacity-100 translate-x-0"
-        leave-active-class="transition ease-in duration-200"
-        leave-from-class="opacity-100 translate-x-0"
-        leave-to-class="opacity-0 translate-x-full"
+        name="notification"
+        tag="div"
+        class="space-y-3"
       >
         <div
           v-for="notification in notifications"
           :key="notification.id"
-          class="bg-white rounded-xl shadow-premium border-l-4 p-4 max-w-sm"
-          :class="notificationClasses(notification.type)"
+          :class="notificationClasses(notification)"
+          @click="removeNotification(notification.id)"
         >
-          <div class="flex items-start gap-3">
-            <!-- Icon -->
-            <div class="flex-shrink-0">
-              <Icon 
-                :name="getIcon(notification.type)" 
-                class="w-5 h-5"
-                :class="iconClasses(notification.type)"
-              />
-            </div>
-            
-            <!-- Content -->
-            <div class="flex-1 min-w-0">
-              <h4 v-if="notification.title" class="font-semibold mb-1" :class="titleClasses(notification.type)">
-                {{ notification.title }}
-              </h4>
-              <p class="text-sm" :class="messageClasses(notification.type)">
-                {{ notification.message }}
-              </p>
-            </div>
-            
-            <!-- Close Button -->
-            <button 
-              @click="removeNotification(notification.id)"
-              class="flex-shrink-0 p-1 rounded-lg transition-colors duration-200"
-              :class="closeButtonClasses(notification.type)"
-            >
-              <Icon name="lucide:x" class="w-4 h-4" />
-            </button>
+          <!-- Icon -->
+          <div class="flex-shrink-0">
+            <Icon 
+              :name="getIcon(notification.type)" 
+              :class="iconClasses(notification.type)"
+            />
           </div>
+          
+          <!-- Content -->
+          <div class="flex-1 min-w-0">
+            <h4 v-if="notification.title" class="font-semibold text-sm mb-1">
+              {{ notification.title }}
+            </h4>
+            <p class="text-sm opacity-90">
+              {{ notification.message }}
+            </p>
+          </div>
+          
+          <!-- Close Button -->
+          <button 
+            @click.stop="removeNotification(notification.id)"
+            class="flex-shrink-0 p-1 rounded-full hover:bg-black/10 transition-colors"
+          >
+            <Icon name="lucide:x" class="w-4 h-4" />
+          </button>
         </div>
       </TransitionGroup>
     </div>
@@ -51,73 +44,73 @@
 </template>
 
 <script setup>
-const uiStore = useUiStore()
+const { notifications, removeNotification } = useNotifications()
 
-// Computed
-const notifications = computed(() => uiStore.notifications)
+const notificationClasses = (notification) => {
+  const baseClasses = [
+    'flex items-start gap-3 p-4 rounded-xl shadow-lg backdrop-blur-sm',
+    'border cursor-pointer transition-all duration-300',
+    'hover:scale-105 hover:shadow-xl max-w-sm'
+  ]
+  
+  const typeClasses = {
+    success: 'bg-green-50/90 border-green-200 text-green-800',
+    error: 'bg-red-50/90 border-red-200 text-red-800',
+    warning: 'bg-yellow-50/90 border-yellow-200 text-yellow-800',
+    info: 'bg-blue-50/90 border-blue-200 text-blue-800',
+    premium: 'bg-gradient-to-r from-gold-50/90 to-bordeaux-50/90 border-gold-200 text-bordeaux-800'
+  }
+  
+  return [...baseClasses, typeClasses[notification.type] || typeClasses.info].join(' ')
+}
 
-// Methods
-const removeNotification = (id) => {
-  uiStore.removeNotification(id)
+const iconClasses = (type) => {
+  const classes = 'w-5 h-5'
+  
+  const typeClasses = {
+    success: 'text-green-600',
+    error: 'text-red-600',
+    warning: 'text-yellow-600',
+    info: 'text-blue-600',
+    premium: 'text-gold-600'
+  }
+  
+  return `${classes} ${typeClasses[type] || typeClasses.info}`
 }
 
 const getIcon = (type) => {
   const icons = {
     success: 'lucide:check-circle',
-    error: 'lucide:alert-circle',
+    error: 'lucide:x-circle',
     warning: 'lucide:alert-triangle',
-    info: 'lucide:info'
+    info: 'lucide:info',
+    premium: 'lucide:crown'
   }
+  
   return icons[type] || icons.info
 }
-
-const notificationClasses = (type) => {
-  const classes = {
-    success: 'border-green-500',
-    error: 'border-red-500',
-    warning: 'border-yellow-500',
-    info: 'border-blue-500'
-  }
-  return classes[type] || classes.info
-}
-
-const iconClasses = (type) => {
-  const classes = {
-    success: 'text-green-500',
-    error: 'text-red-500',
-    warning: 'text-yellow-500',
-    info: 'text-blue-500'
-  }
-  return classes[type] || classes.info
-}
-
-const titleClasses = (type) => {
-  const classes = {
-    success: 'text-green-800',
-    error: 'text-red-800',
-    warning: 'text-yellow-800',
-    info: 'text-blue-800'
-  }
-  return classes[type] || classes.info
-}
-
-const messageClasses = (type) => {
-  const classes = {
-    success: 'text-green-700',
-    error: 'text-red-700',
-    warning: 'text-yellow-700',
-    info: 'text-blue-700'
-  }
-  return classes[type] || classes.info
-}
-
-const closeButtonClasses = (type) => {
-  const classes = {
-    success: 'text-green-400 hover:text-green-600 hover:bg-green-50',
-    error: 'text-red-400 hover:text-red-600 hover:bg-red-50',
-    warning: 'text-yellow-400 hover:text-yellow-600 hover:bg-yellow-50',
-    info: 'text-blue-400 hover:text-blue-600 hover:bg-blue-50'
-  }
-  return classes[type] || classes.info
-}
 </script>
+
+<style scoped>
+.notification-enter-active {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.notification-leave-active {
+  transition: all 0.3s ease-in;
+}
+
+.notification-enter-from {
+  opacity: 0;
+  transform: translateX(100%) scale(0.8);
+}
+
+.notification-leave-to {
+  opacity: 0;
+  transform: translateX(100%) scale(0.8);
+}
+
+.notification-move {
+  transition: transform 0.3s ease;
+}
+</style>
