@@ -37,7 +37,7 @@ export default defineNuxtConfig({
         { name: 'description', content: 'Découvrez des recettes gastronomiques raffinées' }
       ],
       link: [
-        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+        { rel: 'icon', type: 'image/png', href: '/lmc.png' }
       ]
     }
   }

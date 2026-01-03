@@ -1,6 +1,7 @@
 <template>
-  <NuxtLink 
-    :to="`/recettes/${recipe.slug}`" 
+  <component 
+    :is="clickable ? 'NuxtLink' : 'div'"
+    :to="clickable ? `/recettes/${recipe.slug}` : undefined"
     class="group block bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all transform hover:-translate-y-2"
   >
     <!-- Image -->
@@ -42,8 +43,8 @@
       <!-- Author & Stats -->
       <div class="flex items-center justify-between pt-4 border-t border-primary-100">
         <div class="flex items-center space-x-2">
-          <div class="w-8 h-8 bg-gradient-to-br from-primary-400 to-accent-400 rounded-full flex items-center justify-center">
-            <Icon name="mdi:account" class="text-white text-sm" />
+          <div class="w-8 h-8 bg-gradient-to-r from-gray-900 to-accent-500 rounded-full flex items-center justify-center">
+            <Icon name="mdi:account" class="text-white text-xl" />
           </div>
           <span class="text-sm text-primary-700 font-medium">{{ recipe.author.name }}</span>
         </div>
@@ -60,7 +61,7 @@
         </div>
       </div>
     </div>
-  </NuxtLink>
+  </component>
 </template>
 
 <script setup>
@@ -68,6 +69,10 @@ defineProps({
   recipe: {
     type: Object,
     required: true
+  },
+  clickable: {
+    type: Boolean,
+    default: true
   }
 })
 </script>

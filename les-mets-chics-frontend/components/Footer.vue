@@ -1,12 +1,14 @@
 <template>
-  <footer class="bg-primary-900 text-white mt-20">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+  <footer class="bg-gray-900 text-white">
+    <div class=" mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
         <!-- About -->
         <div class="col-span-1 md:col-span-2">
           <div class="flex items-center space-x-3 mb-4">
-            <div class="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
-              <Icon name="mdi:chef-hat" class="text-white text-xl" />
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-primary-500 to-accent-500 rounded-full flex items-center justify-center">
+              <!-- <Icon name="mdi:chef-hat" class="text-white text-xl" /> -->
+              <img src="../public/lmc.png" alt="logo du blog" class="rounded-full">
             </div>
             <h3 class="text-xl font-serif font-bold">Les Mets Chics</h3>
           </div>
@@ -33,10 +35,18 @@
         <div>
           <h4 class="font-semibold mb-4">Navigation</h4>
           <ul class="space-y-2">
-            <li><NuxtLink to="/" class="footer-link">Accueil</NuxtLink></li>
-            <li><NuxtLink to="/categories" class="footer-link">Catégories</NuxtLink></li>
-            <li><NuxtLink to="/recettes" class="footer-link">Recettes</NuxtLink></li>
-            <li><NuxtLink to="/a-propos" class="footer-link">À propos</NuxtLink></li>
+            <li>
+              <NuxtLink to="/" class="footer-link">Accueil</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/categories" class="footer-link">Catégories</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/recettes" class="footer-link">Recettes</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/a-propos" class="footer-link">À propos</NuxtLink>
+            </li>
           </ul>
         </div>
 
@@ -44,10 +54,18 @@
         <div>
           <h4 class="font-semibold mb-4">Légal</h4>
           <ul class="space-y-2">
-            <li><NuxtLink to="/mentions-legales" class="footer-link">Mentions légales</NuxtLink></li>
-            <li><NuxtLink to="/confidentialite" class="footer-link">Confidentialité</NuxtLink></li>
-            <li><NuxtLink to="/cgv" class="footer-link">CGV</NuxtLink></li>
-            <li><NuxtLink to="/contact" class="footer-link">Contact</NuxtLink></li>
+            <li>
+              <NuxtLink to="/mentions-legales" class="footer-link">Mentions légales</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/confidentialite" class="footer-link">Confidentialité</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/cgv" class="footer-link">CGV</NuxtLink>
+            </li>
+            <li>
+              <NuxtLink to="/contact" class="footer-link">Contact</NuxtLink>
+            </li>
           </ul>
         </div>
       </div>

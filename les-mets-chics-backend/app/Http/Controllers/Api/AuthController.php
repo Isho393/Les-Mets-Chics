@@ -47,22 +47,33 @@ class AuthController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
+
+        $avatarPath = null;
+        if ($request->hasFile('avatar')) {
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'avatar' => $avatarPath,
             'role' => 'explorateur',
             'status' => 'pending',
         ]);
 
+        // Déclencher l'événement pour notifier les admins
+        event(new \App\Events\UserRegistered($user));
+
         return response()->json([
-            'message' => 'Inscription réussie. Votre compte est en attente de validation par un administrateur.',
+            'message' => 'Inscription réussie. Votre compte est en attente de validation. Vous recevrez un email une fois votre compte activé.',
             'user' => [
                 'name' => $user->name,
                 'email' => $user->email,
                 'status' => $user->status,
+                'avatar' => $avatarPath ? asset('storage/' . $avatarPath) : null,
             ],
         ], 201);
     }
@@ -132,6 +143,17 @@ class AuthController extends Controller
         // Create token
         $token = $user->createToken('auth-token')->plainTextToken;
 
+        $avatarUrl = null;
+        if ($user->avatar) {
+            // Si c'est une URL Google (commence par http)
+            if (str_starts_with($user->avatar, 'http')) {
+                $avatarUrl = $user->avatar;
+            } else {
+                // Si c'est un fichier local
+                $avatarUrl = asset('storage/' . $user->avatar);
+            }
+        }
+
         return response()->json([
             'message' => 'Connexion réussie.',
             'token' => $token,
@@ -141,6 +163,7 @@ class AuthController extends Controller
                 'email' => $user->email,
                 'role' => $user->role,
                 'status' => $user->status,
+                'avatar' => $avatarUrl,
             ],
         ], 200);
     }
@@ -196,14 +219,153 @@ class AuthController extends Controller
      */
     public function user(Request $request)
     {
+        $user = $request->user();
+        $avatarUrl = null;
+        
+        if ($user->avatar) {
+            // Si c'est une URL Google (commence par http)
+            if (str_starts_with($user->avatar, 'http')) {
+                $avatarUrl = $user->avatar;
+            } else {
+                // Si c'est un fichier local
+                $avatarUrl = asset('storage/' . $user->avatar);
+            }
+        }
+
         return response()->json([
             'user' => [
-                'id' => $request->user()->id,
-                'name' => $request->user()->name,
-                'email' => $request->user()->email,
-                'role' => $request->user()->role,
-                'status' => $request->user()->status,
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'status' => $user->status,
+                'avatar' => $avatarUrl,
             ],
+        ], 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/user/profile",
+     *     tags={"Authentication"},
+     *     summary="Mise à jour du profil",
+     *     description="Met à jour le nom et l'avatar de l'utilisateur",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             @OA\Property(property="name", type="string", example="Jean Dupont"),
+     *             @OA\Property(property="avatar", type="string", format="binary")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Profil mis à jour",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Profil mis à jour avec succès."),
+     *             @OA\Property(property="user", type="object")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Erreur de validation")
+     * )
+     */
+    public function updateProfile(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+
+        $user->name = $request->name;
+
+        // Gérer l'upload de l'avatar
+        if ($request->hasFile('avatar')) {
+            // Supprimer l'ancien avatar s'il existe et n'est pas une URL Google
+            if ($user->avatar && !str_starts_with($user->avatar, 'http')) {
+                \Storage::disk('public')->delete($user->avatar);
+            }
+            
+            $avatarPath = $request->file('avatar')->store('avatars', 'public');
+            $user->avatar = $avatarPath;
+        }
+
+        $user->save();
+
+        $avatarUrl = null;
+        if ($user->avatar) {
+            if (str_starts_with($user->avatar, 'http')) {
+                $avatarUrl = $user->avatar;
+            } else {
+                $avatarUrl = asset('storage/' . $user->avatar);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Profil mis à jour avec succès.',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'role' => $user->role,
+                'status' => $user->status,
+                'avatar' => $avatarUrl,
+            ],
+        ], 200);
+    }
+
+    /**
+     * @OA\Put(
+     *     path="/user/password",
+     *     tags={"Authentication"},
+     *     summary="Changement de mot de passe",
+     *     description="Change le mot de passe de l'utilisateur",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         @OA\JsonContent(
+     *             required={"current_password","password","password_confirmation"},
+     *             @OA\Property(property="current_password", type="string", format="password"),
+     *             @OA\Property(property="password", type="string", format="password"),
+     *             @OA\Property(property="password_confirmation", type="string", format="password")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Mot de passe changé",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Mot de passe changé avec succès.")
+     *         )
+     *     ),
+     *     @OA\Response(response=422, description="Erreur de validation")
+     * )
+     */
+    public function updatePassword(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'current_password' => 'required',
+            'password' => 'required|string|min:8|confirmed',
+        ]);
+
+        // Vérifier le mot de passe actuel
+        if (!Hash::check($request->current_password, $user->password)) {
+            return response()->json([
+                'message' => 'Le mot de passe actuel est incorrect.',
+                'errors' => [
+                    'current_password' => ['Le mot de passe actuel est incorrect.']
+                ]
+            ], 422);
+        }
+
+        // Mettre à jour le mot de passe
+        $user->password = Hash::make($request->password);
+        $user->save();
+
+        return response()->json([
+            'message' => 'Mot de passe changé avec succès.',
         ], 200);
     }
 }

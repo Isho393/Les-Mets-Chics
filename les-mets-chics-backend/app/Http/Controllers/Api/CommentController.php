@@ -6,6 +6,7 @@ use App\Models\Recipe;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\ContentModerationService;
 
 class CommentController extends Controller
 {
@@ -52,6 +53,14 @@ class CommentController extends Controller
             'body' => 'required|string|min:3|max:1000',
         ]);
 
+        // Vérifier le contenu avec le service de modération
+        $moderationService = new ContentModerationService();
+        if ($moderationService->containsBannedWords($request->body)) {
+            return response()->json([
+                'message' => $moderationService->getErrorMessage(),
+            ], 422);
+        }
+
         $recipe = Recipe::where('slug', $slug)
             ->where('status', 'published')
             ->firstOrFail();
@@ -60,16 +69,22 @@ class CommentController extends Controller
             'user_id' => $request->user()->id,
             'recipe_id' => $recipe->id,
             'body' => $request->body,
-            'is_approved' => false, // Requires admin approval
+            'is_approved' => true, // Approuvé automatiquement si pas de mots interdits
         ]);
 
+        // Charger la relation user pour la réponse
+        $comment->load('user');
+
         return response()->json([
-            'message' => 'Commentaire envoyé ! Il sera visible après validation par un administrateur.',
+            'message' => 'Commentaire publié avec succès !',
             'comment' => [
                 'id' => $comment->id,
                 'body' => $comment->body,
                 'is_approved' => $comment->is_approved,
                 'created_at' => $comment->created_at->diffForHumans(),
+                'user' => [
+                    'name' => $comment->user->name,
+                ],
             ],
         ], 201);
     }
@@ -113,7 +128,6 @@ class CommentController extends Controller
             ->firstOrFail();
 
         $comments = $recipe->comments()
-            ->where('is_approved', true)
             ->with('user')
             ->latest()
             ->get()

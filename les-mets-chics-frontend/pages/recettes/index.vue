@@ -44,6 +44,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+  middleware: 'auth'
+})
+
 const api = useApi()
 const searchQuery = ref('')
 const selectedCategory = ref('')
