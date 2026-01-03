@@ -12,7 +12,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000'], // Nuxt.js frontend
+    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000',"https://les-mets-chics.vercel.app"], // Nuxt.js frontend
 
     'allowed_origins_patterns' => [],
 
