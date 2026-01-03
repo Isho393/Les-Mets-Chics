@@ -40,15 +40,6 @@
           <div class="w-16 h-3 bg-charcoal-200 rounded animate-shimmer"></div>
         </div>
       </div>
-      
-      <!-- Author -->
-      <div v-if="showAuthor" class="flex items-center gap-3 mt-4">
-        <div class="w-8 h-8 bg-charcoal-200 rounded-full animate-shimmer"></div>
-        <div class="flex-1">
-          <div class="w-24 h-3 bg-charcoal-200 rounded mb-1 animate-shimmer"></div>
-          <div class="w-16 h-2 bg-charcoal-200 rounded animate-shimmer"></div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
@@ -57,45 +48,32 @@
 const props = defineProps({
   variant: {
     type: String,
-    default: 'card',
-    validator: (value) => ['card', 'list', 'hero', 'compact'].includes(value)
+    default: 'card'
   },
-  
   height: {
     type: String,
     default: 'auto'
   },
-  
   showImage: {
     type: Boolean,
     default: true
   },
-  
   showContent: {
     type: Boolean,
     default: true
   },
-  
   showMeta: {
     type: Boolean,
     default: true
   },
-  
-  showAuthor: {
-    type: Boolean,
-    default: true
-  },
-  
   titleLines: {
     type: Number,
     default: 2
   },
-  
   descriptionLines: {
     type: Number,
     default: 3
   },
-  
   aspectRatio: {
     type: String,
     default: '4/3'
@@ -103,39 +81,20 @@ const props = defineProps({
 })
 
 const containerClasses = computed(() => {
-  const baseClasses = ['bg-white rounded-2xl overflow-hidden shadow-soft']
-  
-  const variants = {
-    card: [''],
-    list: ['flex gap-4'],
-    hero: ['h-96'],
-    compact: ['']
-  }
-  
-  return [...baseClasses, ...variants[props.variant]].join(' ')
+  return 'bg-white rounded-2xl overflow-hidden shadow-soft animate-pulse'
 })
 
 const imageClasses = computed(() => {
-  if (props.variant === 'list') {
-    return 'w-32 h-32 flex-shrink-0 rounded-xl overflow-hidden'
-  }
-  
   const aspectRatios = {
     '1/1': 'aspect-square',
     '4/3': 'aspect-[4/3]',
-    '16/9': 'aspect-video',
-    '3/4': 'aspect-[3/4]'
+    '16/9': 'aspect-video'
   }
-  
   return `${aspectRatios[props.aspectRatio] || 'aspect-[4/3]'} overflow-hidden`
 })
 
 const contentClasses = computed(() => {
-  if (props.variant === 'list') {
-    return 'flex-1 py-2'
-  }
-  
-  return props.variant === 'compact' ? 'p-4' : 'p-6'
+  return 'p-6'
 })
 </script>
 

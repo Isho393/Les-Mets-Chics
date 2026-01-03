@@ -1,72 +1,67 @@
 <template>
   <div class="min-h-screen overflow-hidden">
-    
+
     <!-- Hero Section Immersif -->
     <section class="relative h-screen flex items-center justify-center overflow-hidden">
       <!-- Background Video/Image -->
       <div class="absolute inset-0 z-0">
         <div class="absolute inset-0 bg-gradient-to-br from-black/60 via-black/40 to-black/70 z-10"></div>
-        <img 
-          src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&h=1080&fit=crop" 
-          alt="Cuisine gastronomique" 
-          class="w-full h-full object-cover scale-110 animate-slow-zoom"
-        />
+        <img src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=1920&h=1080&fit=crop"
+          alt="Cuisine gastronomique" class="w-full h-full object-cover scale-110 animate-slow-zoom" />
       </div>
-      
+
       <!-- Particules flottantes -->
       <div class="absolute inset-0 z-20">
-        <div v-for="i in 12" :key="i" 
-             class="absolute w-2 h-2 bg-gold-400/30 rounded-full animate-float"
-             :style="{
-               left: Math.random() * 100 + '%',
-               top: Math.random() * 100 + '%',
-               animationDelay: Math.random() * 3 + 's',
-               animationDuration: (3 + Math.random() * 2) + 's'
-             }"></div>
+        <div v-for="i in 12" :key="i" class="absolute w-2 h-2 bg-gold-400/30 rounded-full animate-float" :style="{
+          left: Math.random() * 100 + '%',
+          top: Math.random() * 100 + '%',
+          animationDelay: Math.random() * 3 + 's',
+          animationDuration: (3 + Math.random() * 2) + 's'
+        }"></div>
       </div>
-      
+
       <!-- Contenu Hero -->
       <div class="relative z-30 text-center px-4 max-w-5xl mx-auto">
         <div class="mb-8">
-          <div class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white/90 text-sm font-medium mb-6 animate-fade-in-up">
+          <div
+            class="inline-flex items-center px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white/90 text-sm font-medium mb-6 animate-fade-in-up">
             <Icon name="lucide:sparkles" class="mr-2" />
             Gastronomie d'Exception
           </div>
         </div>
-        
+
         <h1 class="text-5xl md:text-7xl lg:text-8xl font-display font-bold text-white mb-8 leading-tight">
           <span class="block animate-slide-in-left" style="animation-delay: 0.2s">
             Les Mets
           </span>
-          <span class="block bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent animate-slide-in-right" style="animation-delay: 0.4s">
+          <span
+            class="block bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent animate-slide-in-right"
+            style="animation-delay: 0.4s">
             Chics
           </span>
         </h1>
-        
-        <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up" style="animation-delay: 0.6s">
+
+        <p class="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed animate-fade-in-up"
+          style="animation-delay: 0.6s">
           L'art culinaire à son apogée. Découvrez des recettes d'exception qui éveilleront vos sens.
         </p>
-        
+
         <div class="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up" style="animation-delay: 0.8s">
-          <button 
-            @click="scrollToRecipes"
-            class="hero-btn-primary group"
-          >
+          <button @click="scrollToRecipes" class="hero-btn-primary group">
             <Icon name="lucide:chef-hat" class="mr-3 group-hover:rotate-12 transition-transform" />
             Découvrir l'Excellence
-            <div class="absolute inset-0 bg-gradient-to-r from-gold-400/20 to-gold-600/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-gold-400/20 to-gold-600/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity">
+            </div>
           </button>
-          
-          <button 
-            @click="playIntroVideo"
-            class="hero-btn-secondary group"
-          >
+
+          <button @click="playIntroVideo" class="hero-btn-secondary group">
             <Icon name="lucide:play" class="mr-3 group-hover:scale-110 transition-transform" />
             Voir l'Expérience
           </button>
         </div>
       </div>
-      
+
       <!-- Scroll Indicator -->
       <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-30 animate-bounce">
         <Icon name="lucide:chevron-down" class="text-white/70 text-2xl" />
@@ -76,18 +71,19 @@
     <!-- Section Signature -->
     <section class="py-24 bg-gradient-to-b from-white to-cream-50 relative overflow-hidden">
       <div class="absolute inset-0 bg-pattern opacity-50"></div>
-      
+
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="text-center mb-20">
-          <div class="inline-flex items-center px-6 py-3 bg-bordeaux-100 rounded-full text-bordeaux-800 font-medium mb-8 animate-fade-in">
+          <div
+            class="inline-flex items-center px-6 py-3 bg-bordeaux-100 rounded-full text-bordeaux-800 font-medium mb-8 animate-fade-in">
             <Icon name="lucide:award" class="mr-2" />
             Sélection Premium
           </div>
-          
+
           <h2 class="text-4xl md:text-6xl font-display font-bold text-bordeaux-900 mb-6 animate-fade-in-up">
             Créations d'Exception
           </h2>
-          
+
           <p class="text-xl text-charcoal-600 max-w-3xl mx-auto animate-fade-in-up" style="animation-delay: 0.2s">
             Chaque recette est une œuvre d'art culinaire, pensée pour sublimer vos moments de dégustation.
           </p>
@@ -97,14 +93,13 @@
         <div ref="recipesSection" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
           <!-- Recette Featured -->
           <div class="lg:col-span-2 group cursor-pointer" @click="handleRecipeClick(featuredRecipes[0])">
-            <div class="relative h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-700 hover:-translate-y-2">
-              <img 
-                src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop" 
-                alt="Recette signature" 
-                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-              />
+            <div
+              class="relative h-96 lg:h-[500px] rounded-3xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all duration-700 hover:-translate-y-2">
+              <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800&h=600&fit=crop"
+                alt="Recette signature"
+                class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
               <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-              
+
               <!-- Badge Premium -->
               <div class="absolute top-6 left-6">
                 <div class="flex items-center px-4 py-2 bg-gold-500 text-white rounded-full text-sm font-bold">
@@ -112,7 +107,7 @@
                   Signature
                 </div>
               </div>
-              
+
               <!-- Contenu -->
               <div class="absolute bottom-0 left-0 right-0 p-8">
                 <div class="flex items-center mb-4">
@@ -123,30 +118,28 @@
                     <span>4 pers.</span>
                   </div>
                 </div>
-                
+
                 <h3 class="text-3xl font-display font-bold text-white mb-3">
                   Bœuf Wellington Revisité
                 </h3>
-                
+
                 <p class="text-white/90 text-lg leading-relaxed">
                   Une interprétation moderne du classique britannique, sublimée par nos techniques d'avant-garde.
                 </p>
               </div>
             </div>
           </div>
-          
+
           <!-- Recettes secondaires -->
           <div class="space-y-8">
-            <div v-for="(recipe, index) in featuredRecipes.slice(1, 3)" :key="recipe.id" 
-                 class="group cursor-pointer" @click="handleRecipeClick(recipe)">
-              <div class="relative h-44 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
-                <img 
-                  :src="recipe.image" 
-                  :alt="recipe.title" 
-                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
+            <div v-for="(recipe, index) in featuredRecipes.slice(1, 3)" :key="recipe.id" class="group cursor-pointer"
+              @click="handleRecipeClick(recipe)">
+              <div
+                class="relative h-44 rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-1">
+                <img :src="recipe.image" :alt="recipe.title"
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-                
+
                 <div class="absolute bottom-0 left-0 right-0 p-6">
                   <div class="flex items-center text-gold-400 text-xs mb-2">
                     <Icon name="lucide:clock" class="mr-1" />
@@ -154,7 +147,7 @@
                     <Icon name="lucide:star" class="mr-1" />
                     <span>{{ recipe.rating }}</span>
                   </div>
-                  
+
                   <h4 class="text-white font-display font-semibold text-lg leading-tight">
                     {{ recipe.title }}
                   </h4>
@@ -163,18 +156,20 @@
             </div>
           </div>
         </div>
-        
+
         <!-- CTA Découvrir -->
-        <div class="text-center">
-          <NuxtLink 
-            :to="isAuthenticated ? '/recettes' : '/connexion'"
-            class="premium-btn group"
-          >
-            <span class="relative z-10 flex items-center">
-              <Icon name="lucide:compass" class="mr-3 group-hover:rotate-180 transition-transform duration-500" />
+        <div class="text-center py-10">
+          <NuxtLink :to="isAuthenticated ? '/recettes' : '/connexion'"
+            class="premium-btn group relative inline-flex items-center justify-center px-8 py-4 overflow-hidden rounded-2xl bg-bordeaux-700 text-white transition-all duration-300 shadow-lg">
+            <span class="relative z-10 flex items-center font-medium">
+              <Icon name="lucide:compass"
+                class="mr-3 w-5 h-5 group-hover:rotate-180 transition-transform duration-500" />
               Explorer Toutes les Créations
             </span>
-            <div class="absolute inset-0 bg-gradient-to-r from-bordeaux-600 to-bordeaux-800 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-bordeaux-500 to-bordeaux-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            </div>
           </NuxtLink>
         </div>
       </div>
@@ -186,7 +181,7 @@
       <div class="absolute inset-0 opacity-10">
         <div class="absolute inset-0 bg-pattern-circles"></div>
       </div>
-      
+
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         <div class="text-center mb-20">
           <h2 class="text-4xl md:text-6xl font-display font-bold text-white mb-6">
@@ -199,23 +194,25 @@
 
         <!-- Grille des origines -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <div v-for="(origin, index) in worldOrigins" :key="origin.id" 
-               class="origin-card group cursor-pointer"
-               @click="handleCategoryClick(origin)"
-               :style="{ animationDelay: index * 0.1 + 's' }">
-            <div class="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 hover:border-gold-400/50 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
+          <div v-for="(origin, index) in worldOrigins" :key="origin.id" class="origin-card group cursor-pointer"
+            @click="handleCategoryClick(origin)" :style="{ animationDelay: index * 0.1 + 's' }">
+            <div
+              class="relative h-80 rounded-2xl overflow-hidden bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-sm border border-white/20 hover:border-gold-400/50 transition-all duration-500 hover:-translate-y-3 hover:shadow-2xl">
               <!-- Icon/Image -->
               <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-500">
                   {{ origin.emoji }}
                 </div>
               </div>
-              
+
               <!-- Overlay Content -->
-              <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              
+              <div
+                class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              </div>
+
               <!-- Content -->
-              <div class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+              <div
+                class="absolute bottom-0 left-0 right-0 p-6 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                 <h3 class="text-2xl font-display font-bold text-white mb-2">
                   {{ origin.name }}
                 </h3>
@@ -236,43 +233,43 @@
     <!-- CTA Final Premium -->
     <section class="py-24 bg-gradient-to-br from-cream-50 via-white to-gold-50 relative overflow-hidden">
       <div class="absolute inset-0 bg-pattern-large opacity-50"></div>
-      
+
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
         <div class="mb-12">
-          <div class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gold-100 to-gold-200 rounded-full text-gold-800 font-medium mb-8">
+          <div
+            class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-gold-100 to-gold-200 rounded-full text-gold-800 font-medium mb-8">
             <Icon name="lucide:crown" class="mr-2" />
             Rejoignez l'Excellence
           </div>
         </div>
-        
+
         <h2 class="text-4xl md:text-6xl font-display font-bold text-bordeaux-900 mb-8">
           Votre Aventure Culinaire
           <span class="block text-gold-600">Commence Ici</span>
         </h2>
-        
+
         <p class="text-xl text-charcoal-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-          Accédez à une collection exclusive de recettes d'exception, partagez vos créations et rejoignez une communauté de passionnés.
+          Accédez à une collection exclusive de recettes d'exception, partagez vos créations et rejoignez une communauté
+          de passionnés.
         </p>
-        
+
         <div class="flex flex-col sm:flex-row gap-6 justify-center">
-          <NuxtLink 
-            v-if="!isAuthenticated"
-            to="/inscription"
-            class="cta-primary group"
-          >
+          <NuxtLink v-if="!isAuthenticated" to="/inscription" class="cta-primary group">
             <span class="relative z-10 flex items-center">
               <Icon name="lucide:sparkles" class="mr-3 group-hover:rotate-12 transition-transform" />
               Créer Mon Compte Premium
             </span>
-            <div class="absolute inset-0 bg-gradient-to-r from-gold-400 to-gold-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div
+              class="absolute inset-0 bg-gradient-to-r from-gold-400 to-gold-600 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+            </div>
           </NuxtLink>
-          
+
           <button class="cta-secondary group">
             <Icon name="lucide:play-circle" class="mr-3 group-hover:scale-110 transition-transform" />
             Découvrir en Vidéo
           </button>
         </div>
-        
+
         <!-- Stats -->
         <div class="grid grid-cols-3 gap-8 mt-16 pt-16 border-t border-charcoal-200">
           <div class="text-center">
@@ -290,6 +287,9 @@
         </div>
       </div>
     </section>
+
+    <!-- Footer -->
+    <FooterPremium />
   </div>
 </template>
 
@@ -400,13 +400,13 @@ const handleCategoryClick = (category) => {
 // Animations au montage
 onMounted(() => {
   loading.value = false
-  
+
   // Animation des éléments au scroll
   const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -50px 0px'
   }
-  
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -414,7 +414,7 @@ onMounted(() => {
       }
     })
   }, observerOptions)
-  
+
   // Observer les éléments à animer
   document.querySelectorAll('.origin-card').forEach(el => {
     observer.observe(el)
@@ -447,8 +447,13 @@ onMounted(() => {
 
 /* Animations personnalisées */
 @keyframes slow-zoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.05); }
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.05);
+  }
 }
 
 @keyframes slide-in-left {
@@ -456,6 +461,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateX(-100px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -467,6 +473,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateX(100px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -478,6 +485,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(50px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -485,14 +493,29 @@ onMounted(() => {
 }
 
 @keyframes fade-in {
-  0% { opacity: 0; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-10px) rotate(1deg); }
-  66% { transform: translateY(5px) rotate(-1deg); }
+
+  0%,
+  100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
 }
 
 /* Classes d'animation */
@@ -538,11 +561,12 @@ onMounted(() => {
 
 /* Responsive */
 @media (max-width: 768px) {
+
   .hero-btn-primary,
   .hero-btn-secondary {
     @apply px-6 py-3 text-base;
   }
-  
+
   .cta-primary,
   .cta-secondary {
     @apply px-8 py-4 text-lg;

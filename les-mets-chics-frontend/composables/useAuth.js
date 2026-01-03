@@ -23,10 +23,12 @@ export const useAuth = () => {
     } catch (error) {
       let message = 'Erreur de connexion'
       
-      if (error.status === 403) {
-        message = 'Votre compte est en attente de validation par un administrateur.'
-      } else if (error.status === 401) {
-        message = 'Email ou mot de passe incorrect.'
+      if (error.status === 403 || error.statusCode === 403) {
+        message = error.data?.message || 'Votre compte est en attente de validation par un administrateur.'
+      } else if (error.status === 401 || error.statusCode === 401) {
+        message = error.data?.message || 'Email ou mot de passe incorrect.'
+      } else if (error.data?.message) {
+        message = error.data.message
       }
       
       return { success: false, error: message }
@@ -42,6 +44,8 @@ export const useAuth = () => {
       
       if (error.data?.errors) {
         message = Object.values(error.data.errors).flat().join(', ')
+      } else if (error.data?.message) {
+        message = error.data.message
       }
       
       return { success: false, error: message }

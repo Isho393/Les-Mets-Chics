@@ -130,7 +130,7 @@
 
         <!-- Loading -->
         <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <ui-skeleton-loader v-for="i in 9" :key="i" />
+          <UiSkeletonLoader v-for="i in 9" :key="i" />
         </div>
 
         <!-- Pagination -->

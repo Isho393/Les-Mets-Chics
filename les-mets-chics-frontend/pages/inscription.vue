@@ -212,21 +212,6 @@
         </div>
       </div>
 
-      <!-- Avantages Premium -->
-      <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4 animate-fade-in-up" style="animation-delay: 0.4s">
-        <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/50">
-          <Icon name="lucide:crown" class="text-gold-600 text-2xl mb-2 mx-auto" />
-          <p class="text-sm font-medium text-bordeaux-900">Recettes Exclusives</p>
-        </div>
-        <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/50">
-          <Icon name="lucide:users" class="text-gold-600 text-2xl mb-2 mx-auto" />
-          <p class="text-sm font-medium text-bordeaux-900">Communauté Premium</p>
-        </div>
-        <div class="text-center p-4 bg-white/60 backdrop-blur-sm rounded-2xl border border-white/50">
-          <Icon name="lucide:video" class="text-gold-600 text-2xl mb-2 mx-auto" />
-          <p class="text-sm font-medium text-bordeaux-900">Vidéos HD</p>
-        </div>
-      </div>
     </div>
   </div>
 </template>

@@ -18,7 +18,7 @@
     <FooterPremium />
     
     <!-- Notifications globales -->
-    <ui-global-notifications />
+    <UiGlobalNotifications />
   </div>
 </template>
 

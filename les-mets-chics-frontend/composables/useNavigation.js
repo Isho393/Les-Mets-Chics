@@ -142,12 +142,30 @@ export const useNavigation = () => {
     return true
   }
 
+  // Vérifier si une route est publique
+  const isPublicRoute = (path) => {
+    const publicRoutes = [
+      '/',
+      '/connexion',
+      '/inscription', 
+      '/en-attente',
+      '/a-propos',
+      '/contact',
+      '/mentions-legales',
+      '/cgv',
+      '/confidentialite'
+    ]
+    
+    return publicRoutes.includes(path)
+  }
+
   return {
     getMainMenuItems,
     getUserMenuItems,
     getBreadcrumbs,
     getPageActions,
     redirectAfterLogin,
-    canAccessPage
+    canAccessPage,
+    isPublicRoute
   }
 }

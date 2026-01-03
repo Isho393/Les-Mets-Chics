@@ -43,18 +43,13 @@ export const useAuthStore = defineStore('auth', {
       
       try {
         const config = useRuntimeConfig()
-        const { data, error } = await useFetch(`${config.public.apiBase}/register`, {
+        
+        const { data, error } = await $fetch(`${config.public.apiBase}/register`, {
           method: 'POST',
-          body: credentials,
-          // Ne pas définir Content-Type pour FormData, le navigateur le fera automatiquement
+          body: credentials
         })
         
-        if (error.value) {
-          this.setError(error.value)
-          throw error.value
-        }
-        
-        return data.value
+        return data
       } catch (error) {
         this.setError(error)
         throw error
@@ -69,27 +64,22 @@ export const useAuthStore = defineStore('auth', {
       
       try {
         const config = useRuntimeConfig()
-        const { data, error } = await useFetch(`${config.public.apiBase}/login`, {
+        
+        const data = await $fetch(`${config.public.apiBase}/login`, {
           method: 'POST',
           body: credentials
         })
         
-        if (error.value) {
-          this.setError(error.value)
-          throw error.value
-        }
-        
-        this.token = data.value.token
-        this.user = data.value.user
+        this.token = data.token
+        this.user = data.user
         this.isAuthenticated = true
         
-        // Store token in localStorage
         if (process.client) {
-          localStorage.setItem('token', data.value.token)
-          localStorage.setItem('user', JSON.stringify(data.value.user))
+          localStorage.setItem('token', data.token)
+          localStorage.setItem('user', JSON.stringify(data.user))
         }
         
-        return data.value
+        return data
       } catch (error) {
         this.setError(error)
         throw error
@@ -182,7 +172,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const config = useRuntimeConfig()
         
-        const { data, error } = await useFetch(`${config.public.apiBase}/user/profile`, {
+        const data = await $fetch(`${config.public.apiBase}/user/profile`, {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${this.token}`
@@ -190,18 +180,13 @@ export const useAuthStore = defineStore('auth', {
           body: formData
         })
         
-        if (error.value) {
-          this.setError(error.value)
-          throw error.value
-        }
-        
-        this.user = data.value.user
+        this.user = data.user
         
         if (process.client) {
-          localStorage.setItem('user', JSON.stringify(data.value.user))
+          localStorage.setItem('user', JSON.stringify(data.user))
         }
         
-        return data.value
+        return data
       } catch (error) {
         this.setError(error)
         throw error
@@ -217,7 +202,7 @@ export const useAuthStore = defineStore('auth', {
       try {
         const config = useRuntimeConfig()
         
-        const { data, error } = await useFetch(`${config.public.apiBase}/user/password`, {
+        const data = await $fetch(`${config.public.apiBase}/user/password`, {
           method: 'PUT',
           headers: {
             'Authorization': `Bearer ${this.token}`
@@ -225,12 +210,7 @@ export const useAuthStore = defineStore('auth', {
           body: passwords
         })
         
-        if (error.value) {
-          this.setError(error.value)
-          throw error.value
-        }
-        
-        return data.value
+        return data
       } catch (error) {
         this.setError(error)
         throw error
