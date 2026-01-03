@@ -3,7 +3,6 @@ FROM php:8.2-apache
 # 1. Installation des dépendances système et des extensions PHP requises
 RUN apt-get update && apt-get install -y \
     libicu-dev \
-    libzip-dir \
     libzip-dev \
     libpq-dev \
     libpng-dev \
@@ -29,7 +28,7 @@ COPY . /var/www/html
 # 5. Installation de Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# 6. Installation des dépendances PHP (ignore les plateformes pour plus de sécurité lors du build)
+# 6. Installation des dépendances PHP
 RUN composer install --no-dev --optimize-autoloader
 
 # 7. Droits d'accès cruciaux pour le stockage et le cache Laravel
