@@ -12,9 +12,15 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:3000', 'http://127.0.0.1:3000'], // Nuxt.js frontend
+    'allowed_origins' => [
+        'http://localhost:3000', 
+        'http://127.0.0.1:3000',
+        env('FRONTEND_URL', 'https://ton-frontend.vercel.app')
+    ],
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => [
+        '/^https:\/\/.*\.vercel\.app$/' // Tous les domaines Vercel
+    ],
 
     'allowed_headers' => ['*'],
 
