@@ -21,6 +21,15 @@ Route::get('/categories', [CategoryController::class, 'index']); // Categories l
 Route::get('/categories/{slug}/recipes', [CategoryController::class, 'recipes']); // Recipes by category
 Route::get('/recipes/{slug}/comments', [CommentController::class, 'index']); // View comments
 
+// Serve uploaded files
+Route::get('/storage/{path}', function ($path) {
+    $filePath = storage_path('app/private/' . $path);
+    if (!file_exists($filePath)) {
+        abort(404);
+    }
+    return response()->file($filePath);
+})->where('path', '.*');
+
 // Authentication routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);

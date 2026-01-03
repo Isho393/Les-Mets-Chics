@@ -69,7 +69,7 @@
         </div>
       </section>
 
-      <!-- Categories Preview -->
+      <!-- Categories Carousel -->
       <section class="bg-gradient-to-br from-primary-50 to-accent-50 py-20">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="text-center mb-12">
@@ -81,22 +81,114 @@
             </p>
           </div>
 
-          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 h-full">
-            <div v-for="category in categories" :key="category.id" @click="handleCategoryClick(category.slug)"
-              class="category-card group cursor-pointer flex flex-col items-center justify-center">
-              <div
-                class="aspect-square rounded-2xl flex items-center justify-center mb-3 object-cover group-hover:scale-110 transition-transform">
-                 <img :src='category.image1' alt="images catégories">
+          <!-- Carousel Container -->
+          <div class="relative">
+            <!-- Navigation Buttons -->
+            <button 
+              @click="prevCategory" 
+              class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+              :class="{ 'opacity-50 cursor-not-allowed': currentIndex === 0 }"
+            >
+              <Icon name="mdi:chevron-left" class="text-2xl text-primary-900" />
+            </button>
+            
+            <button 
+              @click="nextCategory" 
+              class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white rounded-full p-3 shadow-lg transition-all duration-300 hover:scale-110"
+              :class="{ 'opacity-50 cursor-not-allowed': currentIndex >= categories.length - itemsPerView }"
+            >
+              <Icon name="mdi:chevron-right" class="text-2xl text-primary-900" />
+            </button>
+
+            <!-- Carousel Track -->
+            <div class="overflow-hidden mx-12">
+              <div 
+                class="flex transition-transform duration-500 ease-in-out"
+                :style="{ transform: `translateX(-${currentIndex * (100 / itemsPerView)}%)` }"
+              >
+                <div 
+                  v-for="category in categories" 
+                  :key="category.id"
+                  class="flex-shrink-0 px-3"
+                  :class="carouselItemClass"
+                >
+                  <!-- Mobile Layout -->
+                  <div 
+                    v-if="itemsPerView === 1 && window.innerWidth < 768"
+                    @click="handleCategoryClick(category.slug)"
+                    class="category-mobile-card group cursor-pointer relative overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  >
+                    <img 
+                      :src="getCategoryImage(category.slug)" 
+                      :alt="category.name"
+                      class="w-full h-48 object-cover"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-4">
+                      <h3 class="text-xl font-serif font-bold text-white mb-1">
+                        {{ category.name }}
+                      </h3>
+                      <p class="text-sm text-white/80 mb-3">
+                        {{ category.recipes_count }} recettes
+                      </p>
+                      <button class="btn-category-mobile">
+                        Découvrir
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Desktop/Tablet Diagonal Layout -->
+                  <div 
+                    v-else
+                    @click="handleCategoryClick(category.slug)"
+                    class="category-diagonal-card group cursor-pointer relative overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2"
+                  >
+                    <!-- Left Triangle - Image -->
+                    <div class="absolute inset-0">
+                      <div class="diagonal-image-section">
+                        <img 
+                          :src="getCategoryImage(category.slug)" 
+                          :alt="category.name"
+                          class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      </div>
+                    </div>
+
+                    <!-- Right Triangle - Content -->
+                    <div class="absolute inset-0">
+                      <div class="diagonal-content-section bg-gradient-to-br from-primary-50 to-accent-50 flex flex-col justify-center items-end p-6 md:p-8">
+                        <h3 class="text-xl md:text-2xl lg:text-3xl font-serif font-bold text-primary-900 mb-2 group-hover:text-accent-600 transition-colors">
+                          {{ category.name }}
+                        </h3>
+                        <p class="text-sm md:text-base text-primary-600 mb-4">
+                          {{ category.recipes_count }} recettes
+                        </p>
+                        <button class="btn-category">
+                          Découvrir
+                          <Icon name="mdi:arrow-right" class="ml-2 group-hover:translate-x-1 transition-transform" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <h3 class="font-semibold text-primary-900 text-center">{{ category.name }}</h3>
-              <p class="text-sm text-primary-600 text-center">{{ category.recipes_count }} recettes</p>
+            </div>
+
+            <!-- Dots Indicator -->
+            <div class="flex justify-center mt-8 space-x-2">
+              <button 
+                v-for="(dot, index) in Math.ceil(categories.length / itemsPerView)" 
+                :key="index"
+                @click="goToSlide(index)"
+                class="w-3 h-3 rounded-full transition-all duration-300"
+                :class="Math.floor(currentIndex / itemsPerView) === index ? 'bg-primary-900' : 'bg-primary-300 hover:bg-primary-500'"
+              ></button>
             </div>
           </div>
         </div>
       </section>
 
       <!-- CTA Section -->
-      <section class="bg-green-50 flex items-center justify-center mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <section class="bg-green-50 flex items-center justify-center mx-auto px-4 lg:px-8 py-20">
         <div class="max-w-7xl bg-green-200 rounded-3xl p-12 text-center">
           <h2 class="text-4xl font-serif font-bold mb-4">
             Rejoignez Notre Communauté
@@ -115,16 +207,60 @@
 </template>
 
 <script setup>
-import france1 from '../public/categories/Cuisine_française.jpg';
-import france2 from '../public/categories/Cuisine_française1.jpg';
-import italie1 from '../public/categories/Cuisine_italienne.jpg';
-import italie2 from '../public/categories/Cuisine_italienne1.jpg';
-import asie1 from '../public/categories/Cuisine_asiatique.jpg';
-import asie2 from '../public/categories/Cuisine_asiatique1.jpg';
-import dessert1 from '../public/categories/Desert.jpg';
-import dessert2 from '../public/categories/Desert1.jpg';
 const api = useApi()
 const authStore = useAuthStore()
+
+// Carousel state
+const currentIndex = ref(0)
+const itemsPerView = ref(1)
+
+// Responsive items per view
+const updateItemsPerView = () => {
+  if (process.client) {
+    const width = window.innerWidth
+    if (width >= 1024) itemsPerView.value = 2      // lg: 2 items
+    else if (width >= 768) itemsPerView.value = 1  // md: 1 item
+    else itemsPerView.value = 1                    // sm: 1 item
+  }
+}
+
+// Add window reference for template
+const window = process.client ? globalThis.window : { innerWidth: 1024 }
+
+const carouselItemClass = computed(() => {
+  return {
+    'w-full': itemsPerView.value === 1,
+    'w-1/2': itemsPerView.value === 2,
+  }
+})
+
+// Carousel navigation
+const nextCategory = () => {
+  if (currentIndex.value < categories.value.length - itemsPerView.value) {
+    currentIndex.value++
+  }
+}
+
+const prevCategory = () => {
+  if (currentIndex.value > 0) {
+    currentIndex.value--
+  }
+}
+
+const goToSlide = (index) => {
+  currentIndex.value = index * itemsPerView.value
+}
+
+// Category images mapping (temporary solution)
+const getCategoryImage = (slug) => {
+  const imageMap = {
+    'francaise': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=800',
+    'italienne': 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=800',
+    'asiatique': 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800',
+    'desserts': 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=800'
+  }
+  return imageMap[slug] || 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800'
+}
 
 // Typewriter effect
 const fullText = "L'Art de la Gastronomie"
@@ -135,42 +271,49 @@ const showRecipes = ref(false)
 const typewriterSpeed = 100
 
 onMounted(() => {
-  let index = 0
-  const typeInterval = setInterval(() => {
-    if (index < fullText.length) {
-      displayedText.value += fullText[index]
-      index++
-    } else {
-      clearInterval(typeInterval)
-      // Déclencher les autres animations après le typewriter
-      setTimeout(() => {
-        showSubtitle.value = true
-      }, 300)
-      setTimeout(() => {
-        showButtons.value = true
-      }, 600)
-      // Déclencher l'animation des recettes après un délai
-      setTimeout(() => {
-        showRecipes.value = true
-      }, 1200)
+  updateItemsPerView()
+  window.addEventListener('resize', updateItemsPerView)
+  
+  // Masquer le spinner initial avant de commencer l'animation typewriter
+  setTimeout(() => {
+    if (window.hideInitialSpinner) {
+      window.hideInitialSpinner()
     }
-  }, typewriterSpeed)
+  }, 500)
+  
+  // Démarrer l'animation typewriter après avoir masqué le spinner
+  setTimeout(() => {
+    let index = 0
+    const typeInterval = setInterval(() => {
+      if (index < fullText.length) {
+        displayedText.value += fullText[index]
+        index++
+      } else {
+        clearInterval(typeInterval)
+        setTimeout(() => showSubtitle.value = true, 300)
+        setTimeout(() => showButtons.value = true, 600)
+        setTimeout(() => showRecipes.value = true, 900)
+      }
+    }, typewriterSpeed)
+  }, 700)
+})
+
+onUnmounted(() => {
+  if (process.client) {
+    window.removeEventListener('resize', updateItemsPerView)
+  }
 })
 
 const { data: recipesData, pending } = await useAsyncData('recipes', () =>
   api.getRecipes()
 )
 
+const { data: categoriesData } = await useAsyncData('categories', () =>
+  api.getCategories()
+)
+
 const recipes = computed(() => recipesData.value?.recipes || [])
-console.log(recipes);
-
-
-const categories = ref([
-  { id: 1, name: 'Française', slug: 'francaise', recipes_count: 12, image1: france1, image2: france2 },
-  { id: 2, name: 'Italienne', slug: 'italienne', recipes_count: 8, image1: italie1, image2: italie2 },
-  { id: 3, name: 'Asiatique', slug: 'asiatique', recipes_count: 10, image1: asie1, image2: asie2 },
-  { id: 4, name: 'Desserts', slug: 'desserts', recipes_count: 15, image1: dessert1, image2:  dessert2}
-])
+const categories = computed(() => categoriesData.value?.categories || [])
 
 const handleRecipeClick = (slug) => {
   if (!authStore.isAuthenticated) {
@@ -230,8 +373,50 @@ const handleViewAllRecipes = () => {
   @apply inline-flex items-center bg-gradient-to-r from-green-900 to-accent-500 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-primary-50 transform hover:scale-105 transition-all;
 }
 
-.category-card {
-  @apply block p-6 bg-white rounded-2xl shadow-md hover:shadow-xl transition-all;
+.btn-category {
+  @apply inline-flex items-center bg-accent-500 hover:bg-accent-600 text-white px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg;
+}
+
+.btn-category-mobile {
+  @apply inline-flex items-center bg-white/20 backdrop-blur-sm hover:bg-white/30 text-white px-4 py-2 rounded-full font-medium text-sm transition-all duration-300 border border-white/30;
+} 
+
+.category-mobile-card {
+  height: 200px;
+}
+
+.category-diagonal-card {
+  height: 280px;
+  @apply sm:h-80 md:h-96;
+}
+
+/* Diagonal Split using CSS clip-path */
+.diagonal-image-section {
+  @apply absolute inset-0;
+  clip-path: polygon(0 0, 60% 0, 40% 100%, 0 100%);
+}
+
+.diagonal-content-section {
+  @apply absolute inset-0;
+  clip-path: polygon(40% 0, 100% 0, 100% 100%, 60% 100%);
+}
+
+/* Responsive diagonal adjustments */
+@media (max-width: 768px) {
+  .diagonal-image-section {
+    clip-path: none;
+    @apply rounded-t-2xl;
+  }
+  
+  .diagonal-content-section {
+    clip-path: none;
+    @apply rounded-b-2xl;
+    top: 60%;
+  }
+  
+  .category-diagonal-card {
+    height: 240px;
+  }
 }
 
 @keyframes fade-in {
@@ -239,7 +424,6 @@ const handleViewAllRecipes = () => {
     opacity: 0;
     transform: translateY(20px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);

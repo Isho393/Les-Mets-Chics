@@ -7,7 +7,7 @@
     <!-- Image -->
     <div class="relative h-64 overflow-hidden bg-primary-100">
       <img 
-        :src="recipe.main_image_url || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800'" 
+        :src="imageUrl" 
         :alt="recipe.title"
         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
       />
@@ -65,7 +65,9 @@
 </template>
 
 <script setup>
-defineProps({
+const config = useRuntimeConfig()
+
+const props = defineProps({
   recipe: {
     type: Object,
     required: true
@@ -74,6 +76,14 @@ defineProps({
     type: Boolean,
     default: true
   }
+})
+
+// Construire l'URL complète de l'image
+const imageUrl = computed(() => {
+  if (!props.recipe.main_image_url) {
+    return 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800'
+  }
+  return `${config.public.apiBase}/storage/${props.recipe.main_image_url}`
 })
 </script>
 
