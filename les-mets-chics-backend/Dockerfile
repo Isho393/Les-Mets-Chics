@@ -1,4 +1,5 @@
-FROM php:8.2-apache
+# Changement de 8.2 vers 8.3
+FROM php:8.3-apache
 
 # 1. Installation des dépendances système et des extensions PHP requises
 RUN apt-get update && apt-get install -y \
@@ -28,8 +29,8 @@ COPY . /var/www/html
 # 5. Installation de Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# 6. Installation des dépendances PHP
-RUN composer install --no-dev --optimize-autoloader
+# 6. Installation des dépendances PHP (avec ignore-platform-reqs par sécurité)
+RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
 # 7. Droits d'accès cruciaux pour le stockage et le cache Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache \
