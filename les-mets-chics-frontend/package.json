@@ -16,7 +16,7 @@
     "@vueuse/motion": "^3.0.3",
     "nuxt": "^3.14.159",
     "pinia": "^2.2.6",
-    "vue": "latest"
+    "vue": "3.5.27"
   },
   "devDependencies": {
     "@nuxt/icon": "^1.9.3",
