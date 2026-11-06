@@ -1,5 +1,7 @@
 # 🍽️ Les Mets Chics
 
+[![Backend tests](https://github.com/Isho393/Les-Mets-Chics/actions/workflows/backend-tests.yml/badge.svg)](https://github.com/Isho393/Les-Mets-Chics/actions/workflows/backend-tests.yml)
+
 Plateforme de recettes gastronomiques avec backend Laravel et frontend Nuxt 3.
 
 ## 📋 Vue d'ensemble
@@ -135,6 +137,24 @@ npm run dev
 ```
 
 Le frontend sera accessible sur `http://localhost:3000`
+
+## 🧪 Tests & intégration continue
+
+Le backend est couvert par une suite PHPUnit (24 tests) qui tourne automatiquement sur GitHub Actions, sous PHP 8.2 et 8.3, à chaque push et à chaque pull request.
+
+| Fichier | Ce qui est vérifié |
+| --- | --- |
+| `tests/Feature/AuthTest.php` | Inscription (compte `pending`), connexion, refus des comptes en attente ou suspendus, changement de mot de passe, routes protégées |
+| `tests/Feature/RecipeApiTest.php` | Recettes publiées vs brouillons, détail d'une recette, likes, publication et rejet des commentaires, affichage des seuls commentaires approuvés |
+| `tests/Feature/StorageSecurityTest.php` | Service des fichiers privés et protection contre la remontée de dossiers (`../`) |
+| `tests/Unit/ContentModerationServiceTest.php` | Détection des termes interdits (majuscules, leetspeak) |
+
+```bash
+cd les-mets-chics-backend
+php artisan test
+```
+
+Les tests utilisent une base SQLite en mémoire : aucune configuration de base de données n'est nécessaire.
 
 ## 📡 API Endpoints
 

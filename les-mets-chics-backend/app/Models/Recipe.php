@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Recipe extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'category_id',
@@ -46,6 +49,11 @@ class Recipe extends Model
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function approvedComments()
+    {
+        return $this->hasMany(Comment::class)->where('is_approved', true);
     }
 
     public function likes()

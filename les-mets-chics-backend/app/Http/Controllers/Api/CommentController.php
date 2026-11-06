@@ -127,7 +127,7 @@ class CommentController extends Controller
             ->where('status', 'published')
             ->firstOrFail();
 
-        $comments = $recipe->comments()
+        $comments = $recipe->approvedComments()
             ->with('user')
             ->latest()
             ->get()

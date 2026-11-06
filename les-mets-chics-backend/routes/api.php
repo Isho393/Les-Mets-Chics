@@ -23,8 +23,12 @@ Route::get('/recipes/{slug}/comments', [CommentController::class, 'index']); // 
 
 // Serve uploaded files
 Route::get('/storage/{path}', function ($path) {
-    $filePath = storage_path('app/private/' . $path);
-    if (!file_exists($filePath)) {
+    // Empêche la sortie du dossier autorisé (path traversal : ../../.env)
+    $baseDir = realpath(storage_path('app/private'));
+    $filePath = realpath(storage_path('app/private/' . $path));
+    if ($baseDir === false || $filePath === false
+        || !str_starts_with($filePath, $baseDir . DIRECTORY_SEPARATOR)
+        || !is_file($filePath)) {
         abort(404);
     }
     return response()->file($filePath);
