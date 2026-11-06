@@ -57,7 +57,7 @@ les-mets-chics-backend/
 ```
 
 **Stack technique** :
-- Laravel 12 + PHP 8.2+
+- Laravel 12 + PHP 8.3+
 - SQLite (dev) / MySQL (prod)
 - Laravel Sanctum (authentification API)
 - Filament 4.2 (panel admin)
@@ -85,7 +85,7 @@ les-mets-chics-frontend/
 ## 🚀 Installation
 
 ### Prérequis
-- PHP 8.2+
+- PHP 8.3+ (exigé par les dépendances verrouillées dans `composer.lock`)
 - Composer
 - Node.js 18+
 - npm
@@ -140,7 +140,7 @@ Le frontend sera accessible sur `http://localhost:3000`
 
 ## 🧪 Tests & intégration continue
 
-Le backend est couvert par une suite PHPUnit (24 tests) qui tourne automatiquement sur GitHub Actions, sous PHP 8.2 et 8.3, à chaque push et à chaque pull request.
+Le backend est couvert par une suite PHPUnit (24 tests) qui tourne automatiquement sur GitHub Actions, sous PHP 8.3 et 8.4, à chaque push et à chaque pull request.
 
 | Fichier | Ce qui est vérifié |
 | --- | --- |
