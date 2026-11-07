@@ -114,7 +114,7 @@ class RecipeController extends Controller
      */
     public function show($slug)
     {
-        $recipe = Recipe::with(['user', 'category', 'comments' => function ($query) {
+        $recipe = Recipe::with(['user', 'category', 'approvedComments' => function ($query) {
             $query->with('user')->latest();
         }])
             ->where('slug', $slug)
@@ -144,7 +144,7 @@ class RecipeController extends Controller
                     'slug' => $recipe->category->slug,
                 ],
                 'likes_count' => $recipe->likes()->count(),
-                'comments' => $recipe->comments->map(function ($comment) {
+                'comments' => $recipe->approvedComments->map(function ($comment) {
                     return [
                         'id' => $comment->id,
                         'body' => $comment->body,

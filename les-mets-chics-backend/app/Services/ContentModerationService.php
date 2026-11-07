@@ -62,10 +62,13 @@ class ContentModerationService
             '.' => '',
             '-' => '',
             '_' => '',
-            ' ' => '',
         ];
         
-        return str_replace(array_keys($replacements), array_values($replacements), $text);
+        $text = str_replace(array_keys($replacements), array_values($replacements), $text);
+
+        // Garder les espaces : les supprimer collait les mots entre eux
+        // (« quel idiot » devenait « quelidiot ») et empêchait toute détection.
+        return preg_replace('/\s+/u', ' ', $text);
     }
 
     /**
